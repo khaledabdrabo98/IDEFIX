@@ -8,9 +8,9 @@ import cv2
 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
-camera.resolution = (640, 480)
+camera.resolution = (1280, 720)
 camera.framerate = 32
-rawCapture = PiRGBArray(camera, size=(640, 480))
+rawCapture = PiRGBArray(camera, size=(1280, 720))
 # allow the camera to warmup
 time.sleep(0.1)
 
@@ -90,7 +90,6 @@ for image in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	rawCapture.truncate(0)
 
 	if cv2.waitKey(10) & 0xFF == ord('q'):
-		cap.release()
 		cv2.destroyAllWindows()
 		break
 
