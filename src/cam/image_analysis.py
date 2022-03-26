@@ -11,7 +11,7 @@ FRAME_RATE = 32
 
 class PiCam:
     def __init__(self):
-        super.__init__()
+        super().__init__()
         # initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
         self.camera.resolution = (CAM_RES_WIDTH, CAM_RES_HEIGHT)

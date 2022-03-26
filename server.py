@@ -6,7 +6,7 @@ IP_PORT = 22000
 
 class Server:
     def __init__(self):
-        super.__init__()
+        super().__init__()
         self.tcpserver = TCPServer(IP_PORT, stateChanged=self.onStateChanged)
 
     def onStateChanged(self, state, msg):
