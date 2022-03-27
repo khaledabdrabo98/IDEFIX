@@ -1,7 +1,6 @@
 from src.tcpcom.tcpcom import TCPClient
-from time import sleep
 
-IP_ADDRESS = "192.168.1.151"
+IP_ADDRESS = "192.168.1.67"
 IP_PORT = 5432
 
 
@@ -26,10 +25,9 @@ class Client:
         response_connection = tcpclient.connect()
         if response_connection:
             self.isConnected = True
-            while self.isConnected:
-                print("Client:-- Sending command: go...")
-                tcpclient.sendMessage("go")
-                sleep(2)
+            # do something while connected
+            # for the moment we just transfer coords from raspi-server to client (pc)
+            # while self.isConnected:
             print("Done")
         else:
             print("Client:-- Connection failed, please check the server is UP.")
