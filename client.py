@@ -1,7 +1,7 @@
 from src.tcpcom.tcpcom import TCPClient
 from time import sleep
 
-IP_ADDRESS = "192.168.1.151"
+IP_ADDRESS = "192.168.1.67"
 IP_PORT = 65432
 
 
