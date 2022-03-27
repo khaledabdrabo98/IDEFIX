@@ -14,19 +14,6 @@ CAM_RES_HEIGHT = 720
 FRAME_RATE = 32
 
 
-def change_brightness(image, value=30):
-    hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
-    h, s, v = cv2.split(hsv)
-
-    lim = 255 - value
-    v[v > lim] = 255
-    v[v <= lim] = v[v <= lim] + value
-
-    final_hsv = cv2.merge((h, s, v))
-    final_frame = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
-    return final_frame
-
-
 class PiCam:
     def __init__(self):
         super().__init__()
@@ -49,9 +36,6 @@ class PiCam:
             # Grab the raw NumPy array representing the image, then initialize the timestamp
             # and occupied/unoccupied text
             frame = image.array
-
-            # Decrease frame brightness
-            frame = change_brightness(frame, -40)
 
             # Convert the frame in BGR(RGB color space) to
             # HSV(hue-saturation-value) color space
@@ -125,11 +109,11 @@ class PiCam:
                 print("Server:-- Sending data...")
                 if not cam.coord_red_led and not cam.coord_green_led:
                     print("\nNo LED detected!")
-                    message += "No data"
-                elif not cam.coord_red_led:
+                    message += "No data\n"
+                elif cam.coord_red_led:
                     print("\nRed LED coord: \n" + cam.coord_red_led)
                     message += "Red LED coord: \n" + cam.coord_red_led
-                elif not cam.coord_green_led:
+                elif cam.coord_green_led:
                     print("\nGreen LED coord: \n" + cam.coord_green_led + "\n")
                     message += "Green LED coord: \n" + cam.coord_green_led + "\n"
                 server.sendMessage(message)
