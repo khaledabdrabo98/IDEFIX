@@ -26,16 +26,17 @@ def onStateChanged(state, msg):
 
 
 def talkWhileConnected():
-    if isConnected:
-        thread = Thread(target=PiCam().capture())
-        thread.start()
-        thread.join()
+    # if isConnected:
+    #     thread = Thread(target=PiCam().capture())
+    #     thread.start()
+    #     thread.join()
     while isConnected:
         # transfer real coords captured by cam
-        x = randint()
-        y = randint()
-        print("Server:-- Sending coord: [", str(x), ", ", str(y), "]")
-        server.sendMessage("Coord [", str(x), ", ", str(y), "]")
+        x = randint(0, 1280)
+        y = randint(0, 720)
+        message = "[" + str(x) + ", " + str(y) + "]"
+        print("Server:-- Sending coord: ", message)
+        server.sendMessage("Coord: " + message)
         sleep(2)
     print("Done")
 
