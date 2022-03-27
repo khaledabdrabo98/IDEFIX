@@ -15,6 +15,19 @@ CAM_RES_HEIGHT = 720
 FRAME_RATE = 32
 
 
+def change_brightness(img, value=30):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsv)
+
+    lim = 255 - value
+    v[v > lim] = 255
+    v[v <= lim] += value
+
+    final_hsv = cv2.merge((h, s, v))
+    img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+    return img
+
+
 class PiCam:
     def __init__(self):
         super().__init__()
@@ -36,7 +49,9 @@ class PiCam:
 
             # grab the raw NumPy array representing the image, then initialize the timestamp
             # and occupied/unoccupied text
-            frame = image.array
+            img = image.array
+
+            frame = change_brightness(img, -30)
 
             # Convert the frame in BGR(RGB color space) to
             # HSV(hue-saturation-value) color space
