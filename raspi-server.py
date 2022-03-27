@@ -34,10 +34,14 @@ def talkWhileConnected():
         thread.join()
     while isConnected:
         # transfer real coords captured by cam
-        print("Server:-- Sending red LED coord: ", cam.coord_red_led)
-        print("Server:-- Sending green LED coord: ", cam.coord_green_led)
-        server.sendMessage("Red LED coord: " + cam.coord_red_led + "\nGreen LED coord: " + cam.coord_green_led + "\n")
+        print("Server:-- Sending Red LED coord: " + cam.coord_red_led +
+              "\nGreen LED coord: " + cam.coord_green_led + "\n")
+        server.sendMessage("Red LED coord: " + cam.coord_red_led +
+                           "\nGreen LED coord: " + cam.coord_green_led + "\n")
         sleep(1)
+
+
+def
 
 
 def main():
