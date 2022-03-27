@@ -1,8 +1,8 @@
 from src.tcpcom.tcpcom import TCPServer
 
 # connection configuration settings
-tcp_ip = "192.168.1.151"
-tcp_port = 631
+tcp_ip = "192.168.1.67"
+tcp_port = 65432
 tcp_reply = "Server message"
 
 
@@ -13,9 +13,9 @@ def onStateChanged(state, msg):
         print("Server:-- Listening...")
     elif state == "CONNECTED":
         isConnected = True
-        print("Server:-- Connected to" + msg)
+        print("Server:-- Connected to " + msg)
     elif state == "MESSAGE":
-        print("Server:-- Message received:", msg)
+        print("Server:-- Message received: ", msg)
         server.sendMessage(tcp_reply)
 
 

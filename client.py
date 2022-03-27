@@ -1,8 +1,8 @@
 from src.tcpcom.tcpcom import TCPClient
 import time
 
-IP_ADDRESS = "192.168.1.67"
-IP_PORT = 631
+IP_ADDRESS = "192.168.1.151"
+IP_PORT = 65432
 
 
 class Client:
@@ -19,7 +19,7 @@ class Client:
             print("Client:-- Connection lost.")
             self.isConnected = False
         elif state == "MESSAGE":
-            print("Client:-- Received data:", msg)
+            print("Client:-- Received data: ", msg)
 
     def run(self):
         tcpclient = TCPClient(IP_ADDRESS, IP_PORT, stateChanged=self.onStateChanged)
