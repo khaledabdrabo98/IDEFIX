@@ -1,3 +1,4 @@
+from src.cam.image_analysis import PiCam
 from src.tcpcom.tcpcom import TCPServer
 
 tcp_ip = "192.168.1.67"
@@ -21,8 +22,10 @@ def onStateChanged(state, msg):
 
 def main():
     global server
+    data = PiCam().capture()
     server = TCPServer(tcp_port, stateChanged=onStateChanged)
 
 
 if __name__ == '__main__':
     main()
+
