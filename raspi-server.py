@@ -1,6 +1,6 @@
-from src.cam.image_analysis import PiCam
 from src.tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
+from picamera import PiCamera
 import cv2
 from threading import Thread
 import numpy as np
