@@ -1,8 +1,7 @@
-from src.tcpcom.tcpcom import TCPServer
+from tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
-from threading import Thread
 import numpy as np
 from time import sleep
 
@@ -31,7 +30,7 @@ def change_brightness(image, value=30):
 class PiCam:
     def __init__(self):
         super().__init__()
-        # initialize the camera and grab a reference to the raw camera capture
+        # Initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
         self.camera.resolution = (CAM_RES_WIDTH, CAM_RES_HEIGHT)
         self.camera.framerate = FRAME_RATE
@@ -42,17 +41,17 @@ class PiCam:
         sleep(0.1)
 
     def capture(self):
-        # capture frames from the camera
+        # Capture frames from the camera
         for image in self.camera.capture_continuous(self.raw_capture, format="bgr", use_video_port=True):
             self.coord_red_led = ""
             self.coord_green_led = ""
 
-            # grab the raw NumPy array representing the image, then initialize the timestamp
+            # Grab the raw NumPy array representing the image, then initialize the timestamp
             # and occupied/unoccupied text
             frame = image.array
 
-            # decrease frame brightness
-            frame = change_brightness(frame, -30)
+            # Decrease frame brightness
+            frame = change_brightness(frame, -40)
 
             # Convert the frame in BGR(RGB color space) to
             # HSV(hue-saturation-value) color space
@@ -120,20 +119,27 @@ class PiCam:
                                 cv2.FONT_HERSHEY_SIMPLEX,
                                 0.5, (0, 255, 0))
 
+            # Send data (red & green LED coord) to client if connected
             if isConnected:
-                print("Server:-- Sending Red LED coord: \n" + cam.coord_red_led +
+                print("Server:-- Sending data.\n Red LED coord: \n" + cam.coord_red_led +
                       "\nGreen LED coord: \n" + cam.coord_green_led + "\n")
-                server.sendMessage("Red LED coord: \n" + cam.coord_red_led +
-                                   "\nGreen LED coord: " + cam.coord_green_led + "\n")
+                server.sendMessage("\nRed LED coord: \n" + cam.coord_red_led +
+                                   "\nGreen LED coord: \n" + cam.coord_green_led + "\n")
 
             # Show frames
             cv2.imshow("LED Color detection", frame)
 
-            # clear the stream in preparation for the next frame
+            # Clear the stream in preparation for the next frame
             self.raw_capture.truncate(0)
 
-            if cv2.waitKey(10) & 0xFF == ord('q'):
+            key = cv2.waitKey(10) & 0xFF
+            if (key == ord('q')) or (key == 27):
+                if isConnected:
+                    print("Server:-- Closing connection.")
+                    server.disconnect()
+                print("Server:-- Closing server.")
                 cv2.destroyAllWindows()
+                server.terminate()
                 break
 
 
@@ -156,9 +162,8 @@ def main():
     global server, cam
     server = TCPServer(tcp_port, stateChanged=onStateChanged)
     cam = PiCam()
-    thread = Thread(target=cam.capture())
-    thread.start()
-    thread.join()
+    # Start getting cam feed
+    cam.capture()
 
 
 if __name__ == '__main__':
