@@ -1,7 +1,7 @@
 from src.tcpcom.tcpcom import TCPServer
 
 tcp_ip = "192.168.1.67"
-tcp_port = 631
+tcp_port = 5432
 tcp_reply = "Message received!"
 
 
