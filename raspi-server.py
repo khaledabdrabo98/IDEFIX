@@ -79,7 +79,8 @@ class PiCam:
                                           (x + w, y + h),
                                           (0, 0, 255), 1)
                     str_coord = "Red LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_red_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x+w) + ", " + str(y+h) + ")]\n"
+                    self.coord_red_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x + w) + ", " + str(
+                        y + h) + ")]\n"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 255))
@@ -97,15 +98,17 @@ class PiCam:
                                           (x + w, y + h),
                                           (0, 255, 0), 1)
                     str_coord = "Green LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_green_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x+w) + ", " + str(y+h) + ")]\n"
+                    self.coord_green_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x + w) + ", " + str(
+                        y + h) + ")]\n"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX,
                                 0.5, (0, 255, 0))
 
-            print("Server:-- Sending Red LED coord: \n" + cam.coord_red_led +
-                  "\nGreen LED coord: " + cam.coord_green_led + "\n")
-            server.sendMessage("Red LED coord: \n" + cam.coord_red_led +
-                               "\nGreen LED coord: " + cam.coord_green_led + "\n")
+            if isConnected:
+                print("Server:-- Sending Red LED coord: \n" + cam.coord_red_led +
+                      "\nGreen LED coord: \n" + cam.coord_green_led + "\n")
+                server.sendMessage("Red LED coord: \n" + cam.coord_red_led +
+                                   "\nGreen LED coord: " + cam.coord_green_led + "\n")
 
             # Show frames
             cv2.imshow("LED Color detection", frame)
@@ -128,7 +131,6 @@ def onStateChanged(state, msg):
         isConnected = True
         print("Server:-- Connected to " + msg)
         server.sendMessage("Hello, client!")
-        talkWhileConnected()
     elif state == "MESSAGE":
         print("Server:-- Message received: ", msg)
         server.sendMessage(tcp_reply)
