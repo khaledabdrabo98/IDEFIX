@@ -1,7 +1,6 @@
 from src.cam.image_analysis import PiCam
 from src.tcpcom.tcpcom import TCPServer
 from time import sleep
-from random import randint
 from threading import Thread
 
 tcp_ip = "192.168.1.151"
@@ -26,19 +25,19 @@ def onStateChanged(state, msg):
 
 
 def talkWhileConnected():
-    # if isConnected:
-    #     thread = Thread(target=PiCam().capture())
-    #     thread.start()
-    #     thread.join()
+    global cam
+
+    if isConnected:
+        cam = PiCam()
+        thread = Thread(target=cam.capture())
+        thread.start()
+        thread.join()
     while isConnected:
         # transfer real coords captured by cam
-        x = randint(0, 1280)
-        y = randint(0, 720)
-        message = "[" + str(x) + ", " + str(y) + "]"
-        print("Server:-- Sending coord: ", message)
-        server.sendMessage("Coord: " + message)
-        sleep(2)
-    print("Done")
+        print("Server:-- Sending red LED coord: ", cam.coord_red_led)
+        print("Server:-- Sending green LED coord: ", cam.coord_green_led)
+        server.sendMessage("Red LED coord: " + cam.coord_red_led + "\nGreen LED coord: " + cam.coord_green_led + "\n")
+        sleep(1)
 
 
 def main():

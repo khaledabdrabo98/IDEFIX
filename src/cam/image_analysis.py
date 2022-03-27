@@ -17,12 +17,17 @@ class PiCam:
         self.camera.resolution = (CAM_RES_WIDTH, CAM_RES_HEIGHT)
         self.camera.framerate = FRAME_RATE
         self.raw_capture = PiRGBArray(self.camera, size=(CAM_RES_WIDTH, CAM_RES_HEIGHT))
+        self.coord_red_led = "["
+        self.coord_green_led = "["
         # allow the camera to warmup
         time.sleep(0.1)
 
     def capture(self):
         # capture frames from the camera
         for image in self.camera.capture_continuous(self.raw_capture, format="bgr", use_video_port=True):
+            self.coord_red_led = "["
+            self.coord_green_led = "["
+
             # grab the raw NumPy array representing the image, then initialize the timestamp
             # and occupied/unoccupied text
             frame = image.array
@@ -68,6 +73,7 @@ class PiCam:
                                           (x + w, y + h),
                                           (0, 0, 255), 1)
                     str_coord = "Red LED (" + str(x) + ", " + str(y) + ")"
+                    self.coord_red_led += "(" + str(x) + ", " + str(y) + ")"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 255))
@@ -85,9 +91,13 @@ class PiCam:
                                           (x + w, y + h),
                                           (0, 255, 0), 1)
                     str_coord = "Green LED (" + str(x) + ", " + str(y) + ")"
+                    self.coord_green_led += "(" + str(x) + ", " + str(y) + ")"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX,
                                 0.5, (0, 255, 0))
+
+            self.coord_red_led += "]"
+            self.coord_green_led += "]"
 
             # Show frames
             cv2.imshow("LED Color detection", frame)

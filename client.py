@@ -28,7 +28,6 @@ class Client:
             # do something while connected
             # for the moment we just transfer coords from raspi-server to client (pc)
             # while self.isConnected:
-            print("Done")
         else:
             print("Client:-- Connection failed, please check the server is UP.")
 
