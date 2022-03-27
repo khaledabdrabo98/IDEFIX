@@ -18,7 +18,7 @@ class Client:
             print("Client:-- Connection lost.")
             self.isConnected = False
         elif state == "MESSAGE":
-            print("Client:-- Received data: \n", msg)
+            print("Client:-- Received data: ", msg)
 
     def run(self):
         tcpclient = TCPClient(IP_ADDRESS, IP_PORT, stateChanged=self.onStateChanged)

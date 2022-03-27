@@ -120,11 +120,19 @@ class PiCam:
                                 0.5, (0, 255, 0))
 
             # Send data (red & green LED coord) to client if connected
+            message = "\n"
             if isConnected:
-                print("Server:-- Sending data.\n Red LED coord: \n" + cam.coord_red_led +
-                      "\nGreen LED coord: \n" + cam.coord_green_led + "\n")
-                server.sendMessage("\nRed LED coord: \n" + cam.coord_red_led +
-                                   "\nGreen LED coord: \n" + cam.coord_green_led + "\n")
+                print("Server:-- Sending data...")
+                if not cam.coord_red_led and not cam.coord_green_led:
+                    print("\nNo LED detected!")
+                    message += "No data"
+                elif not cam.coord_red_led:
+                    print("\nRed LED coord: \n" + cam.coord_red_led)
+                    message += "Red LED coord: \n" + cam.coord_red_led
+                elif not cam.coord_green_led:
+                    print("\nGreen LED coord: \n" + cam.coord_green_led + "\n")
+                    message += "Green LED coord: \n" + cam.coord_green_led + "\n"
+                server.sendMessage(message)
 
             # Show frames
             cv2.imshow("LED Color detection", frame)
