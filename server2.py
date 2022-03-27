@@ -1,6 +1,5 @@
 from src.tcpcom.tcpcom import TCPServer
 
-# connection configuration settings
 tcp_ip = "192.168.1.67"
 tcp_port = 65432
 tcp_reply = "Server message"
