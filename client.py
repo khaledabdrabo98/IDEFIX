@@ -2,7 +2,7 @@ from src.tcpcom.tcpcom import TCPClient
 import time
 
 IP_ADDRESS = "192.168.1.67"
-IP_PORT = 22000
+IP_PORT = 631
 
 
 class Client:

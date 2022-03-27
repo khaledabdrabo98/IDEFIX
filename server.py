@@ -1,7 +1,7 @@
 from src.cam.image_analysis import PiCam
 from src.tcpcom.tcpcom import TCPServer
 
-IP_PORT = 22000
+IP_PORT = 631
 
 
 class Server:
