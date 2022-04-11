@@ -1,0 +1,27 @@
+Classe robot   
+    - c'est la "manette", elle contient les infos du robot (coord, status, etc) et fournis des fonctions pour lui donner des ordres (avancer, tourner etc) et des getter
+
+Classe config_Manager
+    - initialise le programme à partir d'un fichier de config.
+    - détermine le nombre de robots controlés et le nombre d'entité à surveiller (robots des autres groupes) ainsi que leurs couleurs et protocole(IA)
+    - associe chaque robot connecté à un objet sur la cam (coord) et à protocole (IA)
+    
+Classe mère IA
+    - contient les données communes à tous les protocoles de controles des robots
+Classe fille Chat & classe fille Souris
+    - hérite de IA et ajoute des données/fonction propre aux différents roles (condition de victoire ? de défaite ?)
+Classe fille protocole 
+    - hérite de Chat ou Souris, chaque entité correspond à une IA différentes (ie: chat1, chat2, souris1, souris2 etc)
+
+Classe Camera_Manager
+    - s'occupe de la communication avec la camera(raspberry). 
+        - Envoie les infos du fichier config
+        - reçoit les coord des robots et les actualise (basé sur la proximité avec les anciennes coord)
+
+En résumé : 
+Config_Manager init le programme à partir d'un fichier
+Robot est la classe associé au robot physique dénuée de toute intelligence, c'est seulement une "télécommande"
+Les classes IA se voient attribuer un Robot qu'elles controlleront durant l'execution du programme
+Camera_Manager gère les entrées/sorties du réseau (raspberry).
+
+PS : j'envisage un Wiki pour la doc, ou alors dans les Issues
