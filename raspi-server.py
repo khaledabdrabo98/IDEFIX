@@ -2,16 +2,30 @@ from tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
+import json
 import numpy as np
 from time import sleep
 
-tcp_ip = "192.168.1.151"
+tcp_ip = "172.20.10.3"
 tcp_port = 5432
 tcp_reply = "Message received!"
+waiting_for_config = "Waiting for configuration..."
+config_received_reply = "Configuration received!"
+config_false_format_reply = "Bad configuration format, please retry"
+tcp_start_sending_coord = "Sending coordinates..."
 
+# divise par la resolution les pos finales
 CAM_RES_WIDTH = 1280
 CAM_RES_HEIGHT = 720
 FRAME_RATE = 32
+
+
+def is_json(message):
+    try:
+        json.loads(message)
+    except ValueError as e:
+        return False
+    return True
 
 
 class PiCam:
@@ -105,7 +119,7 @@ class PiCam:
 
             # Send data (red & green LED coord) to client if connected
             message = "\n"
-            if isConnected:
+            if receivedConfig:
                 print("Server:-- Sending data...")
                 if not cam.coord_red_led and not cam.coord_green_led:
                     print("\nNo LED detected!")
@@ -136,18 +150,28 @@ class PiCam:
 
 
 def onStateChanged(state, msg):
-    global isConnected
+    global isConnected, receivedConfig, config
 
     if state == "LISTENING":
         isConnected = False
+        receivedConfig = False
         print("Server:-- Listening...")
     elif state == "CONNECTED":
         isConnected = True
         print("Server:-- Connected to " + msg)
-        server.sendMessage("Hello, client!")
+        print(waiting_for_config)
     elif state == "MESSAGE":
-        print("Server:-- Message received: ", msg)
-        server.sendMessage(tcp_reply)
+        if is_json(msg):
+            receivedConfig = True
+            config = json.loads(msg)
+            server.sendMessage("CONFIG OK")
+            print(config_received_reply)
+            print("Config ", config)
+            print(tcp_start_sending_coord)
+        else:
+            server.sendMessage("CONFIG NOT OK")
+            print(config_false_format_reply)
+            receivedConfig = False
 
 
 def main():
