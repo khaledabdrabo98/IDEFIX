@@ -1,4 +1,4 @@
-from tcpcom.tcpcom import TCPServer
+from src.tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
@@ -158,7 +158,7 @@ def onStateChanged(state, msg):
         print("Server:-- Listening...")
     elif state == "CONNECTED":
         isConnected = True
-        print("Server:-- Connected to " + msg)
+        print("Server:-- Connected to client w/ip:" + msg)
         print(waiting_for_config)
     elif state == "MESSAGE":
         if is_json(msg):

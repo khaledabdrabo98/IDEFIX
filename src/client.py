@@ -12,11 +12,12 @@ class Client:
         if state == "CONNECTING":
             print("Client:-- Waiting for connection...")
         elif state == "CONNECTED":
-            print("Client:-- Connection established.")
+            print("Client:-- Connected to Raspberry Pi server!")
         elif state == "DISCONNECTED":
             print("Client:-- Connection lost.")
             self.isConnected = False
         elif state == "MESSAGE":
+            print("Client:-- Received data: ", msg)
             if msg == "CONFIG OK":
                 print("Client:-- Configuration accepted, begin coord reception")
             elif msg == "CONFIG NOT OK":
@@ -32,7 +33,10 @@ class Client:
             # init and send config
             config = {}
             config['nbrobots'] = 4
+            tcpclient.sendMessage("Hello")
             tcpclient.sendMessage(json.dumps(config))
+            print(config)
+            print(json.dumps(config))
             print("Sending configuration...")
         else:
             print("Client:-- Connection failed, please check the server is UP.")
