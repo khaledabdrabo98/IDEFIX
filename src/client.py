@@ -1,6 +1,7 @@
 from src.tcpcom.tcpcom import TCPClient
 import json
 
+
 class Client:
     def __init__(self, ipaddress, port):
         super().__init__()
