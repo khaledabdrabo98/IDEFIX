@@ -7,6 +7,7 @@ pc = "PC"
 waiting_for_config = "Waiting for configuration..."
 config_received_reply = "Configuration received!"
 config_false_format_reply = "Bad configuration format, please retry"
+tcp_start_sending_coord = "Start sending coordinates..."
 
 
 class Receiver:
@@ -41,7 +42,7 @@ class Receiver:
                     self.receivedConfig = True
                     config = json.loads(msg)
                     print(config_received_reply)
-                    print("Config ", config)
+                    print("Configuration: ", config)
                     print(tcp_start_sending_coord)
                 else:
                     print(config_false_format_reply)

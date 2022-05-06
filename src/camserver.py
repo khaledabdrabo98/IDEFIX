@@ -22,7 +22,7 @@ def onStateChanged(state, msg):
         print("Raspberry Pi:-- Listening...")
     elif state == "CONNECTED":
         isConnected = True
-        print("Raspberry Pi:-- Connected to pc w/ip: " + msg)
+        print("Raspberry Pi:-- Connected to PC w/ip: " + msg)
 
 
 class RaspiCamServer:
