@@ -93,7 +93,7 @@ class RaspiCamServer:
                                           (0, 0, 255), 1)
                     str_coord = "Red LED (" + str(x) + ", " + str(y) + ")"
                     self.coord_red_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
-                        str(y + h) + ")];"
+                        str(y + h) + ")],"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 255))
@@ -124,10 +124,10 @@ class RaspiCamServer:
                 if not self.coord_red_led and not self.coord_green_led:
                     print("\nNo LED detected!")
                 elif self.coord_red_led:
-                    print("\nRed LED coord: \n" + self.coord_red_led)
+                    print("\nRed LED coord: \n" + self.coord_red_led[:-1])
                     coord['red'] = self.coord_red_led[:-1]
                 elif self.coord_green_led:
-                    print("\nGreen LED coord: \n" + self.coord_green_led + "\n")
+                    print("\nGreen LED coord: \n" + self.coord_green_led[:-1] + "\n")
                     coord['green'] = self.coord_green_led[:-1]
                 self.server.sendMessage(json.dumps(coord))
 

@@ -2,6 +2,7 @@ from src.com.tcpcom.tcpcom import TCPClient
 from src.utils import is_json
 import json
 
+FLUX_SIZE = 5
 raspberry_pi = "Raspberry Pi"
 pc = "PC"
 waiting_for_config = "Waiting for configuration..."
@@ -21,7 +22,7 @@ class Receiver:
         self.receivedWrongConfig = False
         self.config = None
         self.receiver = None
-        self.coordFlux = []
+        self.coordFlux = [None] * FLUX_SIZE
         self.step = 0
 
     def onStateChanged(self, state, msg):
@@ -90,7 +91,7 @@ class Receiver:
         return self.coordFlux
 
     def manageCoordFlux(self, message):
-        newstep = self.step % 5
+        newstep = self.step % FLUX_SIZE
         self.coordFlux[newstep] = message
         self.step += 1
         if self.step >= 100000:
