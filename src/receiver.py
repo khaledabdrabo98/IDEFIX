@@ -73,8 +73,8 @@ class Receiver:
     def receivedWrongConfiguration(self):
         return self.receivedWrongConfig
 
+    def receiverIsConnected(self):
+        return self.isConnected
+
     def getConfig(self):
         return self.config
-
-    def terminate(self):
-        self.receiver.terminate()

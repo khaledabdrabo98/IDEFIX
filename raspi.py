@@ -10,14 +10,14 @@ def main():
     configReceiver = Receiver(PC_IP_ADDRESS, PC_IP_PORT, True)
     configReceiver.run()
 
-    received = configReceiver.receivedConfiguration()
-    while not received:
+    connected = True
+    received = False
+    while not received and connected:
+        connected = configReceiver.receiverIsConnected()
         received = configReceiver.receivedConfiguration()
 
-
-    if configReceiver.receivedWrongConfig():
+    if configReceiver.receivedWrongConfiguration():
         print(config_false_format_reply)
-        configReceiver.terminate()
     else:
         config = configReceiver.getConfig()
         if config is not None:
