@@ -53,15 +53,17 @@ class Receiver:
 
     def run(self):
         if self.validateConfigMode:
-            node = pc
+            node1 = raspberry_pi
+            node2 = pc
         else:
-            node = raspberry_pi
+            node1 = pc
+            node2 = raspberry_pi
         self.receiver = TCPClient(self.ipaddress, self.port, stateChanged=self.onStateChanged)
         response_connection = self.receiver.connect()
         if response_connection:
             self.isConnected = True
         else:
-            print("DEBUG:-- Connection failed, please check the ", node, " is UP.")
+            print(node1, ":-- Connection failed, please check the ", node2, " is UP.")
 
     def receivedConfiguration(self):
         return self.receivedConfig

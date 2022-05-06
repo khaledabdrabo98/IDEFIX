@@ -19,10 +19,9 @@ def onStateChanged(state, msg):
         config = {}
         config['nbrobots'] = 4
         configSender.sendMessage(json.dumps(config))
-        print(json.dumps(config))
         sleep(5)
         configSender.terminate()
-        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
+        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, True)
         coordReceiver.run()
 
 

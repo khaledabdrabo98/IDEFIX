@@ -6,7 +6,7 @@ PC_IP_PORT = 5005
 
 
 def main():
-    configReceiver = Receiver(PC_IP_ADDRESS, PC_IP_PORT, True)
+    configReceiver = Receiver(PC_IP_ADDRESS, PC_IP_PORT, False)
     configReceiver.run()
 
     while not configReceiver.receivedConfiguration():
@@ -14,6 +14,7 @@ def main():
 
     config = configReceiver.getConfig()
     if config:
+        print("in if config")
         configReceiver.terminate()
         # start receiving coord
         coordSender = RaspiCamServer(PC_IP_ADDRESS, PC_IP_PORT, config)
