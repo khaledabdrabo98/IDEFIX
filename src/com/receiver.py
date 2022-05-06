@@ -1,4 +1,4 @@
-from src.tcpcom.tcpcom import TCPClient
+from src.com.tcpcom.tcpcom import TCPClient
 from src.utils import is_json
 import json
 
@@ -21,6 +21,8 @@ class Receiver:
         self.receivedWrongConfig = False
         self.config = None
         self.receiver = None
+        self.coordFlux = []
+        self.step = 0
 
     def onStateChanged(self, state, msg):
         if self.validateConfigMode:
@@ -32,7 +34,7 @@ class Receiver:
         if state == "CONNECTING":
             print(node1, ":-- Waiting for connection...")
         elif state == "CONNECTED":
-            print(node1, ":-- Connected to ", node2)
+            print(node1, ":-- Connected to", node2)
             if self.validateConfigMode:
                 print(waiting_for_config)
         elif state == "DISCONNECTED":
@@ -44,7 +46,7 @@ class Receiver:
                     self.receivedConfig = True
                     self.config = json.loads(msg)
                     print(config_received_reply)
-                    print("Configuration: ", self.config)
+                    print("Configuration:", self.config)
                     print(tcp_start_sending_coord)
                 else:
                     print(config_false_format_reply)
@@ -52,6 +54,11 @@ class Receiver:
                     self.receivedWrongConfig = True
             else:
                 print(node1, ":-- Received data: ", msg)
+                # coord flux
+                if is_json(msg):
+                    self.manageCoordFlux(json.loads(msg))
+                else:
+                    self.manageCoordFlux(None)
 
     def run(self):
         if self.validateConfigMode:
@@ -65,7 +72,7 @@ class Receiver:
         if response_connection:
             self.isConnected = True
         else:
-            print(node1, ":-- Connection failed, please check the ", node2, " is UP.")
+            print(node1, ":-- Connection failed, please check the", node2, "is UP.")
 
     def receivedConfiguration(self):
         return self.receivedConfig
@@ -78,3 +85,15 @@ class Receiver:
 
     def getConfig(self):
         return self.config
+
+    def getCoordFlux(self):
+        return self.coordFlux
+
+    def manageCoordFlux(self, message):
+        newstep = self.step % 5
+        self.coordFlux[newstep] = message
+        self.step += 1
+        if self.step >= 100000:
+            self.step = 0
+        print(self.coordFlux)
+        print(self.step)

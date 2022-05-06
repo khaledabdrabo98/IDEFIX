@@ -1,11 +1,11 @@
-from src.tcpcom.tcpcom import TCPServer
+from src.com.tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 import numpy as np
 from time import sleep
+import json
 
-tcp_reply = "Message received!"
 tcp_start_sending_coord = "Sending coordinates..."
 
 # divise par la resolution les pos finales
@@ -92,8 +92,8 @@ class RaspiCamServer:
                                           (x + w, y + h),
                                           (0, 0, 255), 1)
                     str_coord = "Red LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_red_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x + w) + ", " + str(
-                        y + h) + ")]\n"
+                    self.coord_red_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
+                        str(y + h) + ")];"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 255))
@@ -111,27 +111,25 @@ class RaspiCamServer:
                                           (x + w, y + h),
                                           (0, 255, 0), 1)
                     str_coord = "Green LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_green_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x + w) + ", " + str(
-                        y + h) + ")]\n"
+                    self.coord_green_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
+                        str(y + h) + ")],"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX,
                                 0.5, (0, 255, 0))
 
             # Send data (red & green LED coord) to client if connected
-            message = "\n"
+            coord = {}
             if isConnected:
-                print("Cam Module:-- Using config: ", self.config)
-                print("Cam Module:-- Sending data...")
+                print("Cam Module:--", tcp_start_sending_coord)
                 if not self.coord_red_led and not self.coord_green_led:
                     print("\nNo LED detected!")
-                    message += "No data\n"
                 elif self.coord_red_led:
                     print("\nRed LED coord: \n" + self.coord_red_led)
-                    message += "Red LED coord: \n" + self.coord_red_led
+                    coord['red'] = self.coord_red_led[:-1]
                 elif self.coord_green_led:
                     print("\nGreen LED coord: \n" + self.coord_green_led + "\n")
-                    message += "Green LED coord: \n" + self.coord_green_led + "\n"
-                self.server.sendMessage(message)
+                    coord['green'] = self.coord_green_led[:-1]
+                self.server.sendMessage(json.dumps(coord))
 
             # Show frames
             cv2.imshow("LED Color detection", frame)

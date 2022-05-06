@@ -1,5 +1,5 @@
-from src.receiver import Receiver
-from src.camserver import RaspiCamServer
+from src.com.receiver import Receiver
+from src.com.camserver import RaspiCamServer
 
 PC_IP_ADDRESS = "172.20.10.3"
 PC_IP_PORT = 5005
@@ -21,7 +21,6 @@ def main():
     else:
         config = configReceiver.getConfig()
         if config is not None:
-            # configReceiver.terminate()
             # open camera and start receiving coord
             coordSender = RaspiCamServer(PC_IP_ADDRESS, PC_IP_PORT, config)
             coordSender.capture()
