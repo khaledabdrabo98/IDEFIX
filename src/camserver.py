@@ -29,7 +29,7 @@ class RaspiCamServer:
     def __init__(self, ipaddress, port ):
         super().__init__()
         # Initialize TCPServer to send cam coords
-        self.server = TCPServer(ipaddress, port, stateChanged=onStateChanged)
+        self.server = TCPServer(port, stateChanged=onStateChanged)
 
         # Initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
