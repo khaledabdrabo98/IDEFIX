@@ -94,7 +94,5 @@ class Receiver:
         newstep = self.step % FLUX_SIZE
         self.coordFlux[newstep] = message
         self.step += 1
-        if self.step >= 100000:
+        if self.step >= 1000:
             self.step = 0
-        print(self.coordFlux)
-        print(self.step)
