@@ -1,5 +1,6 @@
 from src.tcpcom.tcpcom import TCPClient
 from src.utils import is_json
+import json
 
 raspberry_pi = "Raspberry Pi"
 pc = "PC"
@@ -35,32 +36,30 @@ class Receiver:
             print(node1, ":-- Connection lost.")
             self.isConnected = False
         elif state == "MESSAGE":
-            if is_json(msg):
-                self.receivedConfig = True
-                config = json.loads(msg)
-                print(config_received_reply)
-                print("Config ", config)
-                print(tcp_start_sending_coord)
-            else:
-                print(config_false_format_reply)
-                self.receivedConfig = False
-
             if self.validateConfigMode:
-                if msg == "CONFIG OK":
-                    print(node1, ":-- Configuration accepted, begin coord reception")
-
-                elif msg == "CONFIG NOT OK":
-                    print(node1, ":-- Configuration not accepted, please change config format and retry.")
+                if is_json(msg):
+                    self.receivedConfig = True
+                    config = json.loads(msg)
+                    print(config_received_reply)
+                    print("Config ", config)
+                    print(tcp_start_sending_coord)
+                else:
+                    print(config_false_format_reply)
+                    self.receivedConfig = False
             else:
                 print(node1, ":-- Received data: ", msg)
 
     def run(self):
+        if self.validateConfigMode:
+            node = pc
+        else:
+            node = raspberry_pi
         receiver = TCPClient(self.ipaddress, self.port, stateChanged=self.onStateChanged)
         response_connection = receiver.connect()
         if response_connection:
             self.isConnected = True
         else:
-            print("DEBUG:-- Connection failed, please check the server is UP.")
+            print("DEBUG:-- Connection failed, please check the ", node," is UP.")
 
     def receivedConfiguration(self):
         return self.receivedConfig

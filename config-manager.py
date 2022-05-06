@@ -18,19 +18,17 @@ def onStateChanged(state, msg):
         config = {}
         config['nbrobots'] = 4
         configSender.sendMessage(json.dumps(config))
-        print(config)
         print(json.dumps(config))
         print("Sending configuration...")
         sleep(5)
         configSender.terminate()
+        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
+        coordReceiver.run()
 
 
 def main():
     global configSender
     configSender = TCPServer(RASPBERRY_PI_IP_PORT, stateChanged=onStateChanged)
-
-    coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
-    coordReceiver.run()
 
 
 if __name__ == '__main__':
