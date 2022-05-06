@@ -6,11 +6,12 @@ PC_IP_PORT = 5005
 
 
 def main():
-    configReceiver = Receiver(PC_IP_ADDRESS, PC_IP_PORT, False)
+    configReceiver = Receiver(PC_IP_ADDRESS, PC_IP_PORT, True)
     configReceiver.run()
 
-    while not configReceiver.receivedConfiguration():
-        None
+    received = configReceiver.receivedConfiguration()
+    while not received:
+        received = configReceiver.receivedConfiguration()
 
     config = configReceiver.getConfig()
     if config:

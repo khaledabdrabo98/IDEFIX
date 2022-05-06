@@ -21,7 +21,7 @@ def onStateChanged(state, msg):
         configSender.sendMessage(json.dumps(config))
         sleep(5)
         configSender.terminate()
-        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, True)
+        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
         coordReceiver.run()
 
 
