@@ -119,7 +119,7 @@ class RaspiCamServer:
 
             # Send data (red & green LED coord) to client if connected
             message = "\n"
-            if receivedConfig:
+            if isConnected:
                 print("Server:-- Sending data...")
                 if not cam.coord_red_led and not cam.coord_green_led:
                     print("\nNo LED detected!")
