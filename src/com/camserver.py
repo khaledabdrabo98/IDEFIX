@@ -52,7 +52,7 @@ class RaspiCamServer:
             frame = image.array
 
             # converting image into grayscale image
-            gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
             # setting threshold of gray image
             _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
@@ -76,7 +76,7 @@ class RaspiCamServer:
                     square, 0.01 * cv2.arcLength(square, True), True)
 
                 # using drawContours() function
-                cv2.drawContours(image, [square], 0, (0, 0, 255), 5)
+                cv2.drawContours(frame, [square], 0, (0, 0, 255), 5)
 
                 # finding center point of shape
                 M = cv2.moments(square)
@@ -86,7 +86,7 @@ class RaspiCamServer:
 
                 # putting Label at center of each shape
                 if len(approx) == 4:
-                    cv2.putText(image, 'Robot', (x, y),
+                    cv2.putText(frame, 'Robot', (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
             # Convert the frame in BGR(RGB color space) to
