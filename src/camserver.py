@@ -2,16 +2,10 @@ from src.tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
-import json
 import numpy as np
 from time import sleep
 
-tcp_ip = "172.20.10.3"
-tcp_port = 5432
 tcp_reply = "Message received!"
-waiting_for_config = "Waiting for configuration..."
-config_received_reply = "Configuration received!"
-config_false_format_reply = "Bad configuration format, please retry"
 tcp_start_sending_coord = "Sending coordinates..."
 
 # divise par la resolution les pos finales
@@ -20,17 +14,23 @@ CAM_RES_HEIGHT = 720
 FRAME_RATE = 32
 
 
-def is_json(message):
-    try:
-        json.loads(message)
-    except ValueError as e:
-        return False
-    return True
+def onStateChanged(state, msg):
+    global isConnected
+
+    if state == "LISTENING":
+        isConnected = False
+        print("Raspberry Pi:-- Listening...")
+    elif state == "CONNECTED":
+        isConnected = True
+        print("Raspberry Pi:-- Connected to pc w/ip: " + msg)
 
 
-class PiCam:
-    def __init__(self):
+class RaspiCamServer:
+    def __init__(self, ipaddress, port ):
         super().__init__()
+        # Initialize TCPServer to send cam coords
+        self.server = TCPServer(ipaddress, port, stateChanged=onStateChanged)
+
         # Initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
         self.camera.resolution = (CAM_RES_WIDTH, CAM_RES_HEIGHT)
@@ -130,7 +130,7 @@ class PiCam:
                 elif cam.coord_green_led:
                     print("\nGreen LED coord: \n" + cam.coord_green_led + "\n")
                     message += "Green LED coord: \n" + cam.coord_green_led + "\n"
-                server.sendMessage(message)
+                self.server.sendMessage(message)
 
             # Show frames
             cv2.imshow("LED Color detection", frame)
@@ -142,45 +142,9 @@ class PiCam:
             if (key == ord('q')) or (key == 27):
                 if isConnected:
                     print("Server:-- Closing connection.")
-                    server.disconnect()
+                    self.server.disconnect()
                 print("Server:-- Closing server.")
                 cv2.destroyAllWindows()
-                server.terminate()
+                self.server.terminate()
                 break
 
-
-def onStateChanged(state, msg):
-    global isConnected, receivedConfig, config
-
-    if state == "LISTENING":
-        isConnected = False
-        receivedConfig = False
-        print("Server:-- Listening...")
-    elif state == "CONNECTED":
-        isConnected = True
-        print("Server:-- Connected to client w/ip: " + msg)
-        print(waiting_for_config)
-    elif state == "MESSAGE":
-        if is_json(msg):
-            receivedConfig = True
-            config = json.loads(msg)
-            server.sendMessage("CONFIG OK")
-            print(config_received_reply)
-            print("Config ", config)
-            print(tcp_start_sending_coord)
-        else:
-            server.sendMessage("CONFIG NOT OK")
-            print(config_false_format_reply)
-            receivedConfig = False
-
-
-def main():
-    global server, cam
-    server = TCPServer(tcp_port, stateChanged=onStateChanged)
-    cam = PiCam()
-    # Start getting cam feed
-    cam.capture()
-
-
-if __name__ == '__main__':
-    main()
