@@ -29,8 +29,8 @@ def main():
     global configSender
     configSender = TCPServer(RASPBERRY_PI_IP_PORT, stateChanged=onStateChanged)
 
-    # coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
-    # coordReceiver.run()
+    coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
+    coordReceiver.run()
 
 
 if __name__ == '__main__':

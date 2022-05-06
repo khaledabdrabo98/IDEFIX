@@ -120,16 +120,16 @@ class RaspiCamServer:
             # Send data (red & green LED coord) to client if connected
             message = "\n"
             if isConnected:
-                print("Server:-- Sending data...")
-                if not cam.coord_red_led and not cam.coord_green_led:
+                print("Cam Module:-- Sending data...")
+                if not self.coord_red_led and not self.coord_green_led:
                     print("\nNo LED detected!")
                     message += "No data\n"
-                elif cam.coord_red_led:
-                    print("\nRed LED coord: \n" + cam.coord_red_led)
-                    message += "Red LED coord: \n" + cam.coord_red_led
-                elif cam.coord_green_led:
-                    print("\nGreen LED coord: \n" + cam.coord_green_led + "\n")
-                    message += "Green LED coord: \n" + cam.coord_green_led + "\n"
+                elif self.coord_red_led:
+                    print("\nRed LED coord: \n" + self.coord_red_led)
+                    message += "Red LED coord: \n" + self.coord_red_led
+                elif self.coord_green_led:
+                    print("\nGreen LED coord: \n" + self.coord_green_led + "\n")
+                    message += "Green LED coord: \n" + self.coord_green_led + "\n"
                 self.server.sendMessage(message)
 
             # Show frames
@@ -141,9 +141,9 @@ class RaspiCamServer:
             key = cv2.waitKey(10) & 0xFF
             if (key == ord('q')) or (key == 27):
                 if isConnected:
-                    print("Server:-- Closing connection.")
+                    print("Cam Module:-- Closing connection.")
                     self.server.disconnect()
-                print("Server:-- Closing server.")
+                print("Cam Module:-- Closing camera.")
                 cv2.destroyAllWindows()
                 self.server.terminate()
                 break

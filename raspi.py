@@ -12,8 +12,8 @@ def main():
     while not configReceiver.receivedConfiguration():
         None
 
-    # coordSender = RaspiCamServer(PC_IP_ADDRESS, PC_IP_PORT)
-    # coordSender.capture()
+    coordSender = RaspiCamServer(PC_IP_ADDRESS, PC_IP_PORT)
+    coordSender.capture()
 
 
 if __name__ == '__main__':

@@ -38,12 +38,10 @@ class Receiver:
             if is_json(msg):
                 self.receivedConfig = True
                 config = json.loads(msg)
-                server.sendMessage("CONFIG OK")
                 print(config_received_reply)
                 print("Config ", config)
                 print(tcp_start_sending_coord)
             else:
-                server.sendMessage("CONFIG NOT OK")
                 print(config_false_format_reply)
                 self.receivedConfig = False
 
