@@ -3,14 +3,14 @@
 Projet transversal innovant 
 
 ## Requirements
+#### On PC
+- Python3
+
 #### On Raspberry Pi
 - PiCamera
 - Python 3
-- CV2 (for Python)
+- OpenCV2 (for Python)
 - Camera Module
-
-#### On PC
-- Python3
 
 ... and (of course) an Internet connection.
 
@@ -18,18 +18,23 @@ Projet transversal innovant
 First, change the IP address and port of the PC and the Raspberry Pi in `raspi.py` and `config-manager.py`, respectively.
 
 Second, use these commands to run the scripts:
-#### On Raspberry Pi
-```bash
-python3 raspi.py
-```
-
 #### On PC
 ```bash
 python3 config-manager.py
 ```
 
+#### On Raspberry Pi
+```bash
+python3 raspi.py
+```
+The PC and Raspberry Pi will connect using the Wi-Fi connection.
+The PC will start by sending the Configuration Json. The Raspberry Pi proceeds to respond either positively or negatively depending on the
+format of the Json Object. If the Configuration Json is correctly formatted, the camera feed (with the robot detection) will open 
+on your Raspberry Pi. Then, it will start transmitting the coordinates of the detected robots to your PC.
+
+
 ## How to connect to your Raspberry Pi using SSH
-To access your Raspberry Pi remotly using SSH follow these instructions :
+To access your Raspberry Pi remotely using SSH follow these instructions :
 - Enable SSH in `raspi-config`
 - Use the following command to find out the IP address of your Raspberry Pi:
 ```bash
@@ -41,6 +46,7 @@ ssh [username]@[ip address]
 ``` 
 - Enter your `username` and `password`
 - Use `-Y` with the SSH command to have access to the Camera Module 
+
 
 ## Project structure (WIP)
 ```
@@ -63,9 +69,9 @@ ssh [username]@[ip address]
 ├── README.md
 ```
 
+
 ## Developers : 
 * ABDRABO Khaled p1713323
 * BOUDJEMA Bilal p2111858
 * GUILLARDEL Thomas p1612078
 * SERVAGENT Anthony p1709447
-
