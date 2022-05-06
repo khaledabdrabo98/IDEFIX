@@ -19,6 +19,7 @@ class Receiver:
         self.validateConfigMode = validateConfigMode
         self.receivedConfig = False
         self.config = None
+        self.receiver = None
 
     def onStateChanged(self, state, msg):
         if self.validateConfigMode:
@@ -30,9 +31,9 @@ class Receiver:
         if state == "CONNECTING":
             print(node1, ":-- Waiting for connection...")
         elif state == "CONNECTED":
-                print(node1, ":-- Connected to ", node2)
-                if self.validateConfigMode:
-                    print(waiting_for_config)
+            print(node1, ":-- Connected to ", node2)
+            if self.validateConfigMode:
+                print(waiting_for_config)
         elif state == "DISCONNECTED":
             print(node1, ":-- Connection lost.")
             self.isConnected = False
@@ -55,12 +56,18 @@ class Receiver:
             node = pc
         else:
             node = raspberry_pi
-        receiver = TCPClient(self.ipaddress, self.port, stateChanged=self.onStateChanged)
-        response_connection = receiver.connect()
+        self.receiver = TCPClient(self.ipaddress, self.port, stateChanged=self.onStateChanged)
+        response_connection = self.receiver.connect()
         if response_connection:
             self.isConnected = True
         else:
-            print("DEBUG:-- Connection failed, please check the ", node," is UP.")
+            print("DEBUG:-- Connection failed, please check the ", node, " is UP.")
 
     def receivedConfiguration(self):
         return self.receivedConfig
+
+    def getConfig(self):
+        return self.config
+
+    def terminate(self):
+        self.receiver.terminate()

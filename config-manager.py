@@ -14,20 +14,21 @@ def onStateChanged(state, msg):
     elif state == "CONNECTED":
         isConnected = True
         print("PC:-- Connected to Raspberry Pi")
+        print("PC:-- Sending configuration...")
         # init and send config
         config = {}
         config['nbrobots'] = 4
         configSender.sendMessage(json.dumps(config))
         print(json.dumps(config))
-        print("Sending configuration...")
         sleep(5)
         configSender.terminate()
         coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
         coordReceiver.run()
 
 
+
 def main():
-    global configSender
+    global configSender, coordReceiver
     configSender = TCPServer(RASPBERRY_PI_IP_PORT, stateChanged=onStateChanged)
 
 
