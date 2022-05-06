@@ -18,6 +18,7 @@ class Receiver:
         self.isConnected = False
         self.validateConfigMode = validateConfigMode
         self.receivedConfig = False
+        self.receivedWrongConfig = False
         self.config = None
         self.receiver = None
 
@@ -41,13 +42,14 @@ class Receiver:
             if self.validateConfigMode:
                 if is_json(msg):
                     self.receivedConfig = True
-                    config = json.loads(msg)
+                    self.config = json.loads(msg)
                     print(config_received_reply)
-                    print("Configuration: ", config)
+                    print("Configuration: ", self.config)
                     print(tcp_start_sending_coord)
                 else:
                     print(config_false_format_reply)
                     self.receivedConfig = False
+                    self.receivedWrongConfig = True
             else:
                 print(node1, ":-- Received data: ", msg)
 
@@ -67,6 +69,9 @@ class Receiver:
 
     def receivedConfiguration(self):
         return self.receivedConfig
+
+    def receivedWrongConfiguration(self):
+        return self.receivedWrongConfig
 
     def getConfig(self):
         return self.config
