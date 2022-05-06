@@ -76,7 +76,7 @@ class RaspiCamServer:
                     square, 0.01 * cv2.arcLength(square, True), True)
 
                 # using drawContours() function
-                cv2.drawContours(frame, [square], 0, (0, 0, 255), 5)
+                cv2.drawContours(frame, [square], 0, (255, 255, 255), 5)
 
                 # finding center point of shape
                 M = cv2.moments(square)
