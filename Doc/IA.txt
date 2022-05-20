@@ -1,0 +1,4 @@
+pour fonctionner, une IA a besoin :
+    - d'avoir accès à la listes des robots détectés par la caméra
+    - de la reference sur le robot qu'elle controle (ref stricte ou id tableau ?)
+    - d'appliquer son protocole personnel en fonction de ces données

@@ -20,6 +20,7 @@ if __name__ == "__main__":
         try:
             while True:
                 if client.process_waiting_messages():
+                    #print(len(client.nodes))
                     if len(client.nodes) > 0:
                         node = client.nodes[0]
                         if state == 0:
