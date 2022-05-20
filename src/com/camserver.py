@@ -1,22 +1,36 @@
-from tcpcom.tcpcom import TCPServer
+from src.com.tcpcom.tcpcom import TCPServer
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 import numpy as np
 from time import sleep
+import json
 
-tcp_ip = "192.168.1.151"
-tcp_port = 5432
-tcp_reply = "Message received!"
+tcp_start_sending_coord = "Sending coordinates..."
 
+# divise par la resolution les pos finales
 CAM_RES_WIDTH = 1280
 CAM_RES_HEIGHT = 720
 FRAME_RATE = 32
 
 
-class PiCam:
-    def __init__(self):
+def onStateChanged(state, msg):
+    global isConnected
+
+    if state == "LISTENING":
+        isConnected = False
+        print("Raspberry Pi:-- Listening...")
+    elif state == "CONNECTED":
+        isConnected = True
+        print("Raspberry Pi:-- Connected to PC w/ip: " + msg)
+
+
+class RaspiCamServer:
+    def __init__(self, ipaddress, port, config):
         super().__init__()
+        # Initialize TCPServer to send cam coords
+        self.server = TCPServer(port, stateChanged=onStateChanged)
+        self.config = config
         # Initialize the camera and grab a reference to the raw camera capture
         self.camera = PiCamera()
         self.camera.resolution = (CAM_RES_WIDTH, CAM_RES_HEIGHT)
@@ -36,6 +50,44 @@ class PiCam:
             # Grab the raw NumPy array representing the image, then initialize the timestamp
             # and occupied/unoccupied text
             frame = image.array
+
+            # converting image into grayscale image
+            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
+            # setting threshold of gray image
+            _, threshold = cv2.threshold(gray, 127, 255, cv2.THRESH_BINARY)
+
+            # using a findContours() function
+            squares, _ = cv2.findContours(threshold, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+
+            i = 0
+
+            # list for storing square shapes (i.e. robots)
+            for square in squares:
+
+                # here we are ignoring first counter because
+                # find contour function detects whole image as shape
+                if i == 0:
+                    i = 1
+                    continue
+
+                # cv2.approxPloyDP() function to approximate the shape
+                approx = cv2.approxPolyDP(
+                    square, 0.01 * cv2.arcLength(square, True), True)
+
+                # using drawContours() function
+                cv2.drawContours(frame, [square], 0, (255, 255, 255), 5)
+
+                # finding center point of shape
+                M = cv2.moments(square)
+                if M['m00'] != 0.0:
+                    x = int(M['m10'] / M['m00'])
+                    y = int(M['m01'] / M['m00'])
+
+                # putting Label at center of each shape
+                if len(approx) == 4:
+                    cv2.putText(frame, 'Robot', (x, y),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2)
 
             # Convert the frame in BGR(RGB color space) to
             # HSV(hue-saturation-value) color space
@@ -78,8 +130,8 @@ class PiCam:
                                           (x + w, y + h),
                                           (0, 0, 255), 1)
                     str_coord = "Red LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_red_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x + w) + ", " + str(
-                        y + h) + ")]\n"
+                    self.coord_red_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
+                                          str(y + h) + ")],"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 255))
@@ -97,26 +149,25 @@ class PiCam:
                                           (x + w, y + h),
                                           (0, 255, 0), 1)
                     str_coord = "Green LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_green_led += "[(" + str(x) + ", " + str(y) + "), (" + str(x + w) + ", " + str(
-                        y + h) + ")]\n"
+                    self.coord_green_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
+                                            str(y + h) + ")],"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX,
                                 0.5, (0, 255, 0))
 
             # Send data (red & green LED coord) to client if connected
-            message = "\n"
+            coord = {}
             if isConnected:
-                print("Server:-- Sending data...")
-                if not cam.coord_red_led and not cam.coord_green_led:
+                print("Cam Module:--", tcp_start_sending_coord)
+                if not self.coord_red_led and not self.coord_green_led:
                     print("\nNo LED detected!")
-                    message += "No data\n"
-                elif cam.coord_red_led:
-                    print("\nRed LED coord: \n" + cam.coord_red_led)
-                    message += "Red LED coord: \n" + cam.coord_red_led
-                elif cam.coord_green_led:
-                    print("\nGreen LED coord: \n" + cam.coord_green_led + "\n")
-                    message += "Green LED coord: \n" + cam.coord_green_led + "\n"
-                server.sendMessage(message)
+                elif self.coord_red_led:
+                    print("\nRed LED coord: \n" + self.coord_red_led[:-1])
+                    coord['red'] = self.coord_red_led[:-1]
+                elif self.coord_green_led:
+                    print("\nGreen LED coord: \n" + self.coord_green_led[:-1] + "\n")
+                    coord['green'] = self.coord_green_led[:-1]
+                self.server.sendMessage(json.dumps(coord))
 
             # Show frames
             cv2.imshow("LED Color detection", frame)
@@ -127,36 +178,9 @@ class PiCam:
             key = cv2.waitKey(10) & 0xFF
             if (key == ord('q')) or (key == 27):
                 if isConnected:
-                    print("Server:-- Closing connection.")
-                    server.disconnect()
-                print("Server:-- Closing server.")
+                    print("Cam Module:-- Closing connection.")
+                    self.server.disconnect()
+                print("Cam Module:-- Closing camera.")
                 cv2.destroyAllWindows()
-                server.terminate()
+                self.server.terminate()
                 break
-
-
-def onStateChanged(state, msg):
-    global isConnected
-
-    if state == "LISTENING":
-        isConnected = False
-        print("Server:-- Listening...")
-    elif state == "CONNECTED":
-        isConnected = True
-        print("Server:-- Connected to " + msg)
-        server.sendMessage("Hello, client!")
-    elif state == "MESSAGE":
-        print("Server:-- Message received: ", msg)
-        server.sendMessage(tcp_reply)
-
-
-def main():
-    global server, cam
-    server = TCPServer(tcp_port, stateChanged=onStateChanged)
-    cam = PiCam()
-    # Start getting cam feed
-    cam.capture()
-
-
-if __name__ == '__main__':
-    main()

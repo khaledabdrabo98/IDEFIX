@@ -1,3 +1,4 @@
+# Classes
 Classe robot   
     - c'est la "manette", elle contient les infos du robot (coord, status, etc) et fournis des fonctions pour lui donner des ordres (avancer, tourner etc) et des getter
 
@@ -24,4 +25,16 @@ Robot est la classe associé au robot physique dénuée de toute intelligence, c
 Les classes IA se voient attribuer un Robot qu'elles controlleront durant l'execution du programme
 Camera_Manager gère les entrées/sorties du réseau (raspberry).
 
-PS : j'envisage un Wiki pour la doc, ou alors dans les Issues
+
+# Sequencing order :
+    Config_Manager lit le fichier config
+    il envoie les infos(nb robot) à la caméra via Camera_Manager
+    Camera_Manager reçoit les coord des robot (détectés)
+    boucle d'association de chaque robot(coord) a une IA dépendant de la config.
+    gestion des cas particuliers ? (trop pas assez de robot détecté ?)
+
+    Boucle de jeu :
+        - Camera_Manager actualise les coord de chaque robot
+        - chaque IA calcul son objectif (possibilité de faire des requetes d'info au robot)
+        - puis actualise l'ordre donné à son robot
+        - vérification des conditions de victoire/défaite individuelle
