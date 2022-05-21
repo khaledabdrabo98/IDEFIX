@@ -36,3 +36,27 @@ motor.right.target=200"""
         motor.left.target=0
 motor.right.target=0"""
         self.clientRef.run_async_program(self.prog)
+
+    def tournerDroite(self):
+    self.program="""
+    motor.left.target=200
+motor.right.target=0"""
+    self.clientRef.run_async_program(self.prog)
+
+    def tournerGauche(self):
+    self.program="""
+    motor.left.target=0
+motor.right.target=200"""
+    self.clientRef.run_async_program(self.prog)
+
+    def accelerer(self):
+    self.program="""
+    motor.left.target=300
+motor.right.target=300"""
+    self.clientRef.run_async_program(self.prog)
+
+    def ralentir(self):
+        self.program="""
+        motor.left.target=100
+motor.right.target=100"""
+        self.clientRef.run_async_program(self.prog)
