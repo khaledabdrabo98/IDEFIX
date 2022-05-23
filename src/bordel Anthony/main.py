@@ -37,40 +37,30 @@ if __name__ == '__main__':
 
     print("after init")
     print(len(localclient.nodes))
-      
-    print(len(localclient.nodes))
-    #node = client.nodes[0]
-    print(localclient.nodes[0])
-    print(localclient.nodes[1])
+    NBROBOT = len(localclient.nodes)
+    start_time = time.time()
+    if(NBROBOT >0):
+        cptCreatedRobot = 0
+        temp = Robot(localclient,cptCreatedRobot)
+        RobotList= [temp]
+        while(cptCreatedRobot < NBROBOT-1):
+            cptCreatedRobot+=1
+            newRob = Robot(localclient,cptCreatedRobot)
+            RobotList.append(newRob)
 
-    #crea robot 1 et avance
-    firstRobot = Robot(localclient,0)
-    print("1er robot avance")
-    """firstRobot.avancer()
-    time.sleep(3)
-    firstRobot.stopper()"""
-    
-    #crea robot 2 et avance
-    secondRobot = Robot(localclient,1)
-    """print("2e robot avance")
-    secondRobot.avancer()
-    time.sleep(3)
-    secondRobot.stopper()"""
+    for rob in RobotList:
+        rob.avancer()
 
-    #les cinq avancent en meme temps
-    thridRobot = Robot(localclient,2)
-    fourthRobot = Robot(localclient,3)
-    fifthRobot = Robot(localclient,4)
-    print("2e robot avance")
-    secondRobot.avancer()
-    print("1er robot avance")
-    firstRobot.avancer()
-    thridRobot.avancer()
-    fourthRobot.avancer()
-    fifthRobot.avancer()
-    time.sleep(3)
-    secondRobot.stopper()
-    firstRobot.stopper()
-    thridRobot.stopper()
-    fourthRobot.stopper()
-    fifthRobot.stopper()
+        mytime = time.time()
+        print(mytime - start_time)
+
+
+    time.sleep(2)
+    triche = RobotList
+            
+
+    for rob2 in triche:
+        rob2.stopper()
+
+        mytime = time.time()
+        print(mytime - start_time)
