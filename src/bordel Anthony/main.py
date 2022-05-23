@@ -49,7 +49,7 @@ if __name__ == '__main__':
             RobotList.append(newRob)
 
     for rob in RobotList:
-        rob.avancer()
+        rob.tournerGauche()
 
         mytime = time.time()
         print(mytime - start_time)
