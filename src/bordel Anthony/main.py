@@ -1,4 +1,5 @@
 import IA
+import config
 from Robot import Robot
 from http import client
 from tdmclient import ClientAsync, aw
@@ -16,6 +17,8 @@ robotList.append(firstRobot)
 robotList.append(secondRobot)"""
 
 if __name__ == '__main__':
+    start_time = time.time()
+    previous_request = 0
 
     # INIT -> fake program to start the link and to know how many robots are connected
     localclient = ClientAsync(debug=0)
@@ -36,6 +39,7 @@ if __name__ == '__main__':
             print("done")
             
     localclient.run_async_program(prog)
+    previous_request = time.time()
     #END INIT
 
     #print("after init")
@@ -44,6 +48,7 @@ if __name__ == '__main__':
     # Listing des Robots
     NBROBOT = len(localclient.nodes)
     start_time = time.time()
+    previous_request = 0
     RobotList=[]
     if(NBROBOT >0):
         cptCreatedRobot = 0
@@ -69,7 +74,8 @@ if __name__ == '__main__':
 
     while(True): #boucle d'actualisation
         #receiveCoordFromCam()
-        #applyThemToRobotCoord()    
+        #applyThemToRobotCoord()
+        if (previous_request - start_time > config.TRANSPILATION_TIME):
         for rob in RobotList:
             if (canSend): #timebased
                 #doDecision&anction()"""
