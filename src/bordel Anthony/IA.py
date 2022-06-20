@@ -8,14 +8,15 @@ class IA:
         self.robotControled = robotLinked
 
 class Cat(IA):
-    objectifList = []
-    def __init__(self, robotLinked, ext):
+    objectif = Coord()
+    objectif.x = 100
+    objectif.y = 100
+    def __init__(self, robotLinked):
         super().__init__(robotLinked)
-        objectif = Coord()
-        objectif.x = 100
-        objectif.y = 100
-        self.objectifList.append(objectif)
-        self.catExtraVar = ext
+
+    def calcul_angle_vers_objectif():
+        #TODO
+
 
     
 

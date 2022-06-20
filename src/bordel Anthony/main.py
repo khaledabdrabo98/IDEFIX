@@ -67,9 +67,9 @@ if __name__ == '__main__':
 
 
 
-    """while(True): #boucle d'actualisation
+    while(True): #boucle d'actualisation
         #receiveCoordFromCam()
-        #applyThemToRobotCoord()
+        #applyThemToRobotCoord()    
         for rob in RobotList:
             if (canSend): #timebased
                 #doDecision&anction()"""
