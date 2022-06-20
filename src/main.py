@@ -66,9 +66,11 @@ if __name__ == '__main__':
     IAMouseList = []
     for rob in RobotList:
         if(rob.behaviour == "cat"):
-            IACatList.append(rob)
+            cat = IA.Cat(rob)
+            IACatList.append(cat)
         elif(rob.behaviour == "mouse"):
-            IAMouseList.append(rob)
+            mouse = IA.Mouse(rob)
+            IAMouseList.append(mouse)
 
 
     '''
@@ -80,15 +82,17 @@ if __name__ == '__main__':
             #if (canSend): #timebased
                 #doDecision&anction()"""
     '''
+    while (time.time() - start_time < 10):
+        for cat in IACatList:
+            cat.move()
+            cat.objectif.x += 10
+            cat.objectif.y += 3
+            cat.robotControled.updateCoord(cat.robotControled.coord_list[0].x * 2,cat.robotControled.coord_list[0].y * 2)
+            #mytime = time.time()
+            #print(mytime - start_time)
 
-    for rob in RobotList:
-        rob.tournerDroiteHard(2000)
 
-        mytime = time.time()
-        print(mytime - start_time)
-
-
-    time.sleep(3)
+    #time.sleep(3)
     triche = RobotList
             
 

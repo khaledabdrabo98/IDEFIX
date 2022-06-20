@@ -25,9 +25,9 @@ class Robot:
 
     async def prog(self):
             with await self.clientRef.nodes[self.mynode].lock() as node:
-                print(node)
-                print(self.mynode)
-                print(len(self.clientRef.nodes))
+                #print(node)
+                #print(self.mynode)
+                #print(len(self.clientRef.nodes))
                 error = await node.compile(self.program)
                 if error is not None:
                     print(f"Compilation error: {error['error_msg']}")
@@ -51,7 +51,7 @@ motor.right.target=0"""
 
     def tournerDroiteSoft(self,duration):
         self.program = """
-        timer.period[0] = """ + str(duration) + """
+        timer.period[0] = """ + str(int(duration)) + """
 motor.left.target = 200
 motor.right.target = 100
 
@@ -62,7 +62,7 @@ onevent timer0
 
     def tournerGaucheSoft(self,duration):
         self.program = """
-timer.period[0] = """ + str(duration) + """
+timer.period[0] = """ + str(int(duration)) + """
 motor.right.target = 200
  motor.left.target = 100
 
@@ -74,7 +74,7 @@ onevent timer0
 
     def tournerDroiteHard(self,duration):
         self.program = """
-        timer.period[0] = """ + str(duration) + """
+        timer.period[0] = """ + str(int(duration)) + """
 motor.left.target = 500
 motor.right.target = -500
 
@@ -86,8 +86,10 @@ onevent timer0
         self.clientRef.run_async_program(self.prog)
 
     def tournerGaucheHard(self,duration):
+        print(duration)
+        print(int(duration))
         self.program = """
-timer.period[0] = """ + str(duration) + """
+timer.period[0] = """ + str(int(duration)) + """
 motor.right.target = 500
 motor.left.target = -500
 
@@ -123,19 +125,19 @@ onevent timer0
         vecteurRobot = []
         vecteurRobot.append(self.coord_list[0].x - self.coord_list[1].x)
         vecteurRobot.append(self.coord_list[0].y - self.coord_list[1].y)
-        print("X vecteur Robot : ", vecteurRobot[0])
-        print("y vecteur Robot : ", vecteurRobot[1])
+        #print("X vecteur Robot : ", vecteurRobot[0])
+        #print("y vecteur Robot : ", vecteurRobot[1])
         produitScalaire = np.dot(vecteurReference, vecteurRobot)
-        print("Produit scalaire : ", produitScalaire)
+        #print("Produit scalaire : ", produitScalaire)
         a = np.array((self.coord_list[0].x, self.coord_list[0].y))
         b = np.array((self.coord_list[1].x, self.coord_list[1].y))
         distanceVecteurRobot = np.linalg.norm(b - a)
-        print("Distance du vecteur : ", distanceVecteurRobot)
+        #print("Distance du vecteur : ", distanceVecteurRobot)
         cosAngle = (1.0*produitScalaire)/(1.0*(distanceVecteurRobot*6))
-        print("Cosinus : ", cosAngle)
+        #print("Cosinus : ", cosAngle)
         if self.coord_list[1].y > self.coord_list[0].y:
             self.angle = - math.degrees(np.arccos(cosAngle))
         else:
             self.angle = math.degrees(np.arccos(cosAngle))
-        print(self.angle)
+        #print(self.angle)
 
