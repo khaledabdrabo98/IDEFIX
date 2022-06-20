@@ -10,6 +10,7 @@ class Robot :
     clientRef = 0
     coord_list = []
     angle = 0
+    behaviour = "cat"
     def __init__(self,client,nodeN):
         self.clientRef = client
         self.mynode = nodeN
@@ -46,16 +47,53 @@ motor.right.target=200"""
 motor.right.target=0"""
         self.clientRef.run_async_program(self.prog)
 
-    def tournerDroite(self):
+    def tournerDroiteSoft(self,duration):
         self.program = """
-        motor.left.target=200
-    motor.right.target=100"""
+        timer.period[0] = """ + str(duration) + """
+motor.left.target = 200
+motor.right.target = 100
+
+onevent timer0
+    motor.right.target = 200
+    timer.period[0] = 0"""
         self.clientRef.run_async_program(self.prog)
 
-    def tournerGauche(self):
+    def tournerGaucheSoft(self,duration):
         self.program = """
-        motor.left.target=100
-    motor.right.target=200"""
+timer.period[0] = """ + str(duration) + """
+motor.right.target = 200
+ motor.left.target = 100
+
+onevent timer0
+    motor.left.target = 200
+    timer.period[0] = 0
+"""
+        self.clientRef.run_async_program(self.prog)
+
+    def tournerDroiteHard(self,duration):
+        self.program = """
+        timer.period[0] = """ + str(duration) + """
+motor.left.target = 500
+motor.right.target = -500
+
+
+onevent timer0
+    motor.right.target = 200
+    motor.left.target = 200
+    timer.period[0] = 0"""
+        self.clientRef.run_async_program(self.prog)
+
+    def tournerGaucheHard(self,duration):
+        self.program = """
+timer.period[0] = """ + str(duration) + """
+motor.right.target = 500
+motor.left.target = -500
+
+onevent timer0
+    motor.left.target = 200
+    motor.right.target = 200
+    timer.period[0] = 0
+"""
         self.clientRef.run_async_program(self.prog)
 
     def accelerer(self, x):

@@ -5,13 +5,14 @@ import cv2
 import numpy as np
 from time import sleep
 import json
+#import config
 
 tcp_start_sending_coord = "Sending coordinates..."
 
 # divise par la resolution les pos finales
-CAM_RES_WIDTH = 1280
-CAM_RES_HEIGHT = 720
-FRAME_RATE = 32
+CAM_RES_WIDTH = 1280 #config.CAM_RES_WIDTH
+CAM_RES_HEIGHT = 720 #config.CAM_RES_HEIGHT
+FRAME_RATE = 32 #config.FRAME_RATE
 
 
 def onStateChanged(state, msg):
