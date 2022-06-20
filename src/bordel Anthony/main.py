@@ -71,17 +71,16 @@ if __name__ == '__main__':
             IAMouseList.append(rob)
 
 
-
+    '''
     while(True): #boucle d'actualisation
         #receiveCoordFromCam()
         #applyThemToRobotCoord()
         if (previous_request - start_time > config.TRANSPILATION_TIME):
         for rob in RobotList:
-            if (canSend): #timebased
+            #if (canSend): #timebased
                 #doDecision&anction()"""
+    '''
 
-
-    
     for rob in RobotList:
         rob.tournerDroiteHard(2000)
 

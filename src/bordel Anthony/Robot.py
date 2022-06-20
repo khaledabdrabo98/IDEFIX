@@ -4,14 +4,16 @@ import numpy as np
 import math
 from Coord import Coord
 
-class Robot :
+
+class Robot:
     program =""""""
     mynode = 0
     clientRef = 0
     coord_list = []
     angle = 0
     behaviour = "cat"
-    def __init__(self,client,nodeN):
+
+    def __init__(self, client, nodeN):
         self.clientRef = client
         self.mynode = nodeN
         coord1 = Coord()
@@ -136,7 +138,4 @@ onevent timer0
         else:
             self.angle = math.degrees(np.arccos(cosAngle))
         print(self.angle)
-
-
-
 
