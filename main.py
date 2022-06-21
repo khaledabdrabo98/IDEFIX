@@ -1,5 +1,4 @@
 import src.IA
-import src.config
 from src.Robot import Robot
 from tdmclient import ClientAsync, aw
 import time
@@ -7,7 +6,8 @@ from src.com.receiver import Receiver
 from src.com.tcpcom.tcpcom import TCPServer
 import json
 
-RASPBERRY_PI_IP_ADDRESS = "172.20.10.13"
+#RASPBERRY_PI_IP_ADDRESS = "172.20.10.13" #khaled
+RASPBERRY_PI_IP_ADDRESS = "192.168.1.67"
 RASPBERRY_PI_IP_PORT = 5005
 
 
@@ -20,8 +20,8 @@ def onStateChanged(state, msg):
         print("PC:-- Connected to Raspberry Pi")
         print("PC:-- Sending configuration...")
         # init and send config
-        configInit = {'nbrobots': config.NB_ROBOTS, 'colors': config.LED_COLORS,
-                  'nbchats': config.NB_CHATS, 'nbsouris': config.NB_SOURIS}
+        configInit = {'nbrobots': src.config.NB_ROBOTS, 'colors': src.config.LED_COLORS,
+                  'nbchats': src.config.NB_CHATS, 'nbsouris': src.config.NB_SOURIS}
         configSender.sendMessage(json.dumps(configInit))
         coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
         coordReceiver.run()
