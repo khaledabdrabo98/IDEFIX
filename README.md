@@ -47,6 +47,11 @@ ssh [username]@[ip address]
 - Enter your `username` and `password`
 - Use `-Y` with the SSH command to have access to the Camera Module 
 
+In our case (example) :
+```bash
+ssh -Y pi@[ip address]
+```
+
 
 ## Project structure (WIP)
 ```
