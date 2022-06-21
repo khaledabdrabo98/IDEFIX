@@ -133,10 +133,10 @@ class RaspiCamServer:
                 print("Cam Module:--", tcp_start_sending_coord)
                 if not self.coord_red_led and not self.coord_green_led:
                     print("\nNo LED detected!")
-                elif self.coord_red_led:
+                if self.coord_red_led:
                     print("\nRed LED coord: \n" + self.coord_red_led[:-1])
                     coord['red'] = self.coord_red_led[:-1]
-                elif self.coord_green_led:
+                if self.coord_green_led:
                     print("\nGreen LED coord: \n" + self.coord_green_led[:-1] + "\n")
                     coord['green'] = self.coord_green_led[:-1]
                 self.server.sendMessage(json.dumps(coord))
