@@ -2,7 +2,7 @@ from http import client
 from tdmclient import ClientAsync, aw
 import numpy as np
 import math
-from Coord import Coord
+from src.Coord import Coord
 
 
 class Robot:

@@ -1,9 +1,10 @@
-import IA
-import config
-from Robot import Robot
+import src.IA
+import src.config
+from src.Robot import Robot
 from http import client
 from tdmclient import ClientAsync, aw
 import time
+
 
 class TestCoord:
     localclient = ClientAsync(debug=0)

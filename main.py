@@ -1,15 +1,15 @@
-import IA
-import config
-from Robot import Robot
-from http import client
+import src.IA
+import src.config
+from src.Robot import Robot
 from tdmclient import ClientAsync, aw
 import time
-from com.receiver import Receiver
-from com.tcpcom.tcpcom import TCPServer
+from src.com.receiver import Receiver
+from src.com.tcpcom.tcpcom import TCPServer
 import json
 
 RASPBERRY_PI_IP_ADDRESS = "172.20.10.13"
 RASPBERRY_PI_IP_PORT = 5005
+
 
 def onStateChanged(state, msg):
     global isConnected

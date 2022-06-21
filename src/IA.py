@@ -1,10 +1,11 @@
 from asyncio import sleep
-import Robot
-import config
-from Coord import Coord
+import src.Robot
+import src.config
+from src.Coord import Coord
 import numpy as np
 import math
 import time
+
 
 class IA:
 
