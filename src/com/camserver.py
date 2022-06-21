@@ -128,7 +128,7 @@ class RaspiCamServer:
                                 0.5, (0, 255, 0))
 
             # Send data (red & green LED coord) to client if connected
-            coord = {}
+            coord = {'red': None, 'green': None}
             if isConnected:
                 print("Cam Module:--", tcp_start_sending_coord)
                 if not self.coord_red_led and not self.coord_green_led:
