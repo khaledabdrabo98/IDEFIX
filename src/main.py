@@ -4,6 +4,29 @@ from Robot import Robot
 from http import client
 from tdmclient import ClientAsync, aw
 import time
+from com.receiver import Receiver
+from com.tcpcom.tcpcom import TCPServer
+import json
+
+RASPBERRY_PI_IP_ADDRESS = "172.20.10.13"
+RASPBERRY_PI_IP_PORT = 5005
+
+def onStateChanged(state, msg):
+    global isConnected
+    if state == "LISTENING":
+        print("PC:-- Listening...")
+    elif state == "CONNECTED":
+        isConnected = True
+        print("PC:-- Connected to Raspberry Pi")
+        print("PC:-- Sending configuration...")
+        # init and send config
+        configInit = {'nbrobots': config.NB_ROBOTS, 'colors': config.LED_COLORS,
+                  'nbchats': config.NB_CHATS, 'nbsouris': config.NB_SOURIS}
+        configSender.sendMessage(json.dumps(configInit))
+        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
+        coordReceiver.run()
+        configSender.terminate()
+        configSent = True
 
 
 """firstRobot = IA.Robot()
@@ -19,6 +42,11 @@ robotList.append(secondRobot)"""
 if __name__ == '__main__':
     start_time = time.time()
     previous_request = 0
+
+    global configSender, coordReceiver, configSent
+    configSent=False
+    configSender = TCPServer(RASPBERRY_PI_IP_PORT, stateChanged=onStateChanged)
+
 
     # INIT -> fake program to start the link and to know how many robots are connected
     localclient = ClientAsync(debug=0)
@@ -82,7 +110,10 @@ if __name__ == '__main__':
             #if (canSend): #timebased
                 #doDecision&anction()"""
     '''
-    while (time.time() - start_time < 10):
+
+    while (configSent and time.time() - start_time < 10):
+        #print(coordReceiver.getCoordFlux())
+
         for cat in IACatList:
             cat.move()
             cat.objectif.x += 10
