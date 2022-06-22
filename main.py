@@ -11,6 +11,9 @@ from src.utils import centre_shape
 RASPBERRY_PI_IP_ADDRESS = "192.168.1.67"
 RASPBERRY_PI_IP_PORT = 5005
 
+configSent = False
+coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
+
 
 def onStateChanged(state, msg):
     global isConnected
@@ -20,14 +23,19 @@ def onStateChanged(state, msg):
         isConnected = True
         print("PC:-- Connected to Raspberry Pi")
         print("PC:-- Sending configuration...")
+        global configSent
+        configSent = True
         # init and send config
         configInit = {'nbrobots': src.config.NB_ROBOTS, 'colors': src.config.LED_COLORS,
                       'nbchats': src.config.NB_CHATS, 'nbsouris': src.config.NB_SOURIS}
+        global configSender
         configSender.sendMessage(json.dumps(configInit))
-        coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
+
+        global coordReceiver
+        #coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
         coordReceiver.run()
         configSender.terminate()
-        configSent = True
+        
 
 
 """firstRobot = IA.Robot()
@@ -44,9 +52,12 @@ if __name__ == '__main__':
     start_time = time.time()
     previous_request = 0
 
-    global configSender, coordReceiver, configSent
-    configSent = False
+    global configSender#, coordReceiver#, configSent
+    #configSent = False
+    
     configSender = TCPServer(RASPBERRY_PI_IP_PORT, stateChanged=onStateChanged)
+
+    print("je passe ici")
 
     # INIT -> fake program to start the link and to know how many robots are connected
     localclient = ClientAsync(debug=0)
@@ -97,10 +108,11 @@ if __name__ == '__main__':
     IAMouseList = []
     for rob in RobotList:
         if (rob.behaviour == "cat"):
-            cat = IA.Cat(rob)
+            cat = src.IA.Cat(rob)
             IACatList.append(cat)
+            print("create 1 cat")
         elif (rob.behaviour == "mouse"):
-            mouse = IA.Mouse(rob)
+            mouse = src.IA.Mouse(rob)
             IAMouseList.append(mouse)
 
     '''
@@ -112,23 +124,64 @@ if __name__ == '__main__':
             #if (canSend): #timebased
                 #doDecision&anction()"""
     '''
+    
+    while(not configSent): # attente de la finalisation de la config
+        time.sleep(1)
+        print("j'attend la config 1sec")
+    print("sortie de boucle")
 
-    while configSent and (time.time() - start_time < 10):
+    flux = coordReceiver.getCoordFlux()
+    while(flux == []): #attente des premières coord
+        time.sleep(1)
+        flux = coordReceiver.getCoordFlux()
 
-        flux = coordReceiver.getCoordFlux()['green']
-        if new_coord is not None:
-            all_coords = flux.split(";")
-            coord = all_coords[0].split(",")
-            center = centre_shape(coord[0], coord[1], coord[2], coord[3])
-            IACatList[0].updateCoord(center[0], center[1])
-            IACatList[0].updateRayon(coord[2] - coord[0])  # w-x
+    time.sleep(1) # securite pour la detection coord 
+
+
+
+    while (time.time() - start_time < 25):
+        time.sleep(1)
+        actual_time = time.time()
+        if ((actual_time - IACatList[0].sleep_required) >= (IACatList[0].lastSupplied)):            
+            flux = str(coordReceiver.getCoordFlux()) # tout ce parsing permet de lire la position du 1er carré vert detecté (supposé être le robot)
+            print("mon flux" + str(flux))
+            if flux !=  "{\"red\": null, \"green\": null}":
+                coord = [0,0,0,0]
+                while (flux[0]!= ':'):  #remove red name
+                    flux = flux[1:]
+                flux = flux[1:]  #remove red's ':'
+                while (flux[0]!= ':'):  #remove red data and green name
+                    flux = flux[1:]
+                flux = flux[1:] #remove green's ':'
+                flux = flux[1:]  #remove ' '
+                flux = flux[1:] #remove '''
+                print(flux)
+                for i in range(4) :
+                    coord[i] = 0
+                    while(flux[0]=='0' or flux[0]=='1' or flux[0]=='2' or flux[0]=='3' or flux[0]=='4' or flux[0]=='5' or flux[0]=='6' or flux[0]=='7' or flux[0]=='8' or flux[0]=='9'):
+                        coord[i]*=10
+                        coord[i]+=int(flux[0])
+                        flux = flux[1:]
+                    print(coord[i])
+                    flux = flux[1:] #remove the ','
+
+
+
+                """all_coords = flux.split(";")
+                print(all_coords)
+                coord = all_coords[0].split(",")
+                print (coord)"""
+                center = centre_shape(int(coord[0]), int(coord[1]), int(coord[2]), int(coord[3]))
+                IACatList[0].robotControled.updateCoord(center[0], center[1])
+                IACatList[0].robotControled.updateRayon(coord[2] - coord[0])  # w-x
 
         for cat in IACatList:
-            cat.move()
-            cat.objectif.x += 10
-            cat.objectif.y += 3
-            cat.robotControled.updateCoord(cat.robotControled.coord_list[0].x * 2,
-                                           cat.robotControled.coord_list[0].y * 2)
+            cat.objectif.x == 1000
+            cat.objectif.y == -200
+            cat.robotControled.ralentir()
+            #cat.move()
+            #cat.robotControled.updateCoord(cat.robotControled.coord_list[0].x * 2,
+                                           #cat.robotControled.coord_list[0].y * 2)
             # mytime = time.time()
             # print(mytime - start_time)
 

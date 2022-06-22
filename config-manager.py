@@ -17,7 +17,7 @@ def onStateChanged(state, msg):
     if state == "LISTENING":
         print("PC:-- Listening...")
     elif state == "CONNECTED":
-        isConnected = True
+        
         print("PC:-- Connected to Raspberry Pi")
         print("PC:-- Sending configuration...")
         # init and send config
@@ -28,6 +28,7 @@ def onStateChanged(state, msg):
         coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
         coordReceiver.run()
         configSender.terminate()
+        isConnected = True
 
 
 def main():

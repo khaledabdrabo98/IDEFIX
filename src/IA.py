@@ -59,20 +59,20 @@ class Cat(IA):
             print(actual_time)
             angle = int(self.calcul_angle_vers_objectif())
             if (angle>45 ):
-                self.robotControled.tournerGaucheHard((angle*config.DURATION_VERYHARD)/360)
-                self.sleep_required = (((angle*config.DURATION_VERYHARD)/360)/1000) +0.5
+                self.robotControled.tournerGaucheHard((angle*src.config.DURATION_VERYHARD)/360)
+                self.sleep_required = (((angle*src.config.DURATION_VERYHARD)/360)/1000) +2
             elif (angle>0):
-                self.robotControled.tournerGaucheSoft((angle*config.DURATION_SOFT)/360)
-                self.sleep_required = (((angle*config.DURATION_SOFT)/360)/1000) +0.5
+                self.robotControled.tournerGaucheSoft((angle*src.config.DURATION_SOFT)/360)
+                self.sleep_required = (((angle*src.config.DURATION_SOFT)/360)/1000) +2
 
             elif (angle <-45):
                 angle = -angle
-                self.robotControled.tournerDroiteHard((angle*config.DURATION_VERYHARD)/360)
-                self.sleep_required = (((angle*config.DURATION_VERYHARD)/360)/1000) +0.5
+                self.robotControled.tournerDroiteHard((angle*src.config.DURATION_VERYHARD)/360)
+                self.sleep_required = (((angle*src.config.DURATION_VERYHARD)/360)/1000) +2
             elif (angle <0):
                 angle = -angle
-                self.robotControled.tournerDroiteSoft((angle*config.DURATION_SOFT)/360)
-                self.sleep_required = (((angle*config.DURATION_SOFT)/360)/1000) +0.5
+                self.robotControled.tournerDroiteSoft((angle*src.config.DURATION_SOFT)/360)
+                self.sleep_required = (((angle*src.config.DURATION_SOFT)/360)/1000) +2
             else: #angle = 0
                 self.robotControled.avancer()
                 self.sleep_required = 0

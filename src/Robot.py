@@ -116,11 +116,12 @@ onevent timer0
         self.rayon = r
 
     def updateCoord(self, x, y):
-        self.coord_list[1].x = self.coord_list[0].x
-        self.coord_list[1].y = self.coord_list[0].y
-        self.coord_list[0].x = x
-        self.coord_list[0].y = y
-        self.calculOrientation()
+        if(x != self.coord_list[0].x and -y != self.coord_list[0].y):
+            self.coord_list[1].x = self.coord_list[0].x
+            self.coord_list[1].y = self.coord_list[0].y
+            self.coord_list[0].x = x
+            self.coord_list[0].y = -y
+            self.calculOrientation()
 
     def calculOrientation(self):
         vecteurReference = []

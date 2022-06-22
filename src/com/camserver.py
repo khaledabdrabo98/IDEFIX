@@ -71,7 +71,7 @@ class RaspiCamServer:
             red_mask = cv2.inRange(hsvFrame, red_lower, red_upper)
 
             # Set range for green color and define mask
-            green_lower = np.array([50, 110, 50], np.uint8)
+            green_lower = np.array([30, 100, 30], np.uint8)
             green_upper = np.array([100, 200, 100], np.uint8)
             green_mask = cv2.inRange(hsvFrame, green_lower, green_upper)
 

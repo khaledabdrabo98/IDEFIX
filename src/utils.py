@@ -13,6 +13,6 @@ def is_json(message):
 
 
 def centre_shape(x, y, w, h):
-    c_x = (x + w) / 2
-    c_y = (y + h) / 2
+    c_x = x + (w / 2)
+    c_y = y + (h / 2)
     return [c_x, c_y]
