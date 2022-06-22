@@ -1,5 +1,4 @@
 import src.IA
-import src.config
 from src.Robot import Robot
 from tdmclient import ClientAsync, aw
 import time
@@ -8,7 +7,8 @@ from src.com.tcpcom.tcpcom import TCPServer
 import json
 from src.utils import centre_shape
 
-RASPBERRY_PI_IP_ADDRESS = "172.20.10.13"
+#RASPBERRY_PI_IP_ADDRESS = "172.20.10.13" #khaled
+RASPBERRY_PI_IP_ADDRESS = "192.168.1.67"
 RASPBERRY_PI_IP_PORT = 5005
 
 
