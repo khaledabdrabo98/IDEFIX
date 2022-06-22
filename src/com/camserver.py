@@ -66,13 +66,13 @@ class RaspiCamServer:
             hsvFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
             # Set range for red color and define mask
-            red_lower = np.array([136, 87, 111], np.uint8)
+            red_lower = np.array([160, 155, 84], np.uint8)
             red_upper = np.array([180, 255, 255], np.uint8)
             red_mask = cv2.inRange(hsvFrame, red_lower, red_upper)
 
             # Set range for green color and define mask
-            green_lower = np.array([25, 52, 72], np.uint8)
-            green_upper = np.array([102, 255, 255], np.uint8)
+            green_lower = np.array([50, 110, 50], np.uint8)
+            green_upper = np.array([100, 200, 100], np.uint8)
             green_mask = cv2.inRange(hsvFrame, green_lower, green_upper)
 
             # Morphological Transform, Dilation for each color and bitwise_and operator
@@ -96,14 +96,14 @@ class RaspiCamServer:
 
             for pic, contour in enumerate(contours):
                 area = cv2.contourArea(contour)
-                if (area > 300):
+                if (area > 1500):
                     x, y, w, h = cv2.boundingRect(contour)
                     frame = cv2.rectangle(frame, (x, y),
                                           (x + w, y + h),
                                           (0, 0, 255), 1)
                     str_coord = "Red LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_red_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
-                                          str(y + h) + ")],"
+                    self.coord_red_led += str(x) + "," + str(y) + "," + str(w) + "," + \
+                                          str(h) + ";"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                                 (0, 0, 255))
@@ -115,14 +115,14 @@ class RaspiCamServer:
 
             for pic, contour in enumerate(contours):
                 area = cv2.contourArea(contour)
-                if (area > 300):
+                if (area > 1500):
                     x, y, w, h = cv2.boundingRect(contour)
                     frame = cv2.rectangle(frame, (x, y),
                                           (x + w, y + h),
                                           (0, 255, 0), 1)
                     str_coord = "Green LED (" + str(x) + ", " + str(y) + ")"
-                    self.coord_green_led += "[(" + str(x) + "," + str(y) + "),(" + str(x + w) + "," + \
-                                            str(y + h) + ")],"
+                    self.coord_green_led += str(x) + "," + str(y) + "," + str(w) + "," + \
+                                            str(h) + ";"
                     cv2.putText(frame, str_coord, (x, y),
                                 cv2.FONT_HERSHEY_SIMPLEX,
                                 0.5, (0, 255, 0))

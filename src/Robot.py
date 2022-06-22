@@ -9,6 +9,7 @@ class Robot:
     program =""""""
     mynode = 0
     clientRef = 0
+    rayon = 0
     coord_list = []
     angle = 0
     behaviour = "cat"
@@ -110,6 +111,9 @@ onevent timer0
         motor.left.target=100
         motor.right.target=100"""
         self.clientRef.run_async_program(self.prog)
+
+    def updateRayon(self, r):
+        self.rayon = r
 
     def updateCoord(self, x, y):
         self.coord_list[1].x = self.coord_list[0].x

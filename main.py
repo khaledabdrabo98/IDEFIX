@@ -6,6 +6,7 @@ import time
 from src.com.receiver import Receiver
 from src.com.tcpcom.tcpcom import TCPServer
 import json
+from src.utils import centre_shape
 
 RASPBERRY_PI_IP_ADDRESS = "172.20.10.13"
 RASPBERRY_PI_IP_PORT = 5005
@@ -20,8 +21,8 @@ def onStateChanged(state, msg):
         print("PC:-- Connected to Raspberry Pi")
         print("PC:-- Sending configuration...")
         # init and send config
-        configInit = {'nbrobots': config.NB_ROBOTS, 'colors': config.LED_COLORS,
-                  'nbchats': config.NB_CHATS, 'nbsouris': config.NB_SOURIS}
+        configInit = {'nbrobots': src.config.NB_ROBOTS, 'colors': src.config.LED_COLORS,
+                      'nbchats': src.config.NB_CHATS, 'nbsouris': src.config.NB_SOURIS}
         configSender.sendMessage(json.dumps(configInit))
         coordReceiver = Receiver(RASPBERRY_PI_IP_ADDRESS, RASPBERRY_PI_IP_PORT, False)
         coordReceiver.run()
@@ -44,62 +45,63 @@ if __name__ == '__main__':
     previous_request = 0
 
     global configSender, coordReceiver, configSent
-    configSent=False
+    configSent = False
     configSender = TCPServer(RASPBERRY_PI_IP_PORT, stateChanged=onStateChanged)
-
 
     # INIT -> fake program to start the link and to know how many robots are connected
     localclient = ClientAsync(debug=0)
     print(localclient.process_waiting_messages())
     program = """"""
+
+
     async def prog():
-            with await localclient.lock() as node:
-                print("init")
-                #print(node)
-                #print(len(localclient.nodes))
-                error = await node.compile(program)
+        with await localclient.lock() as node:
+            print("init")
+            # print(node)
+            # print(len(localclient.nodes))
+            error = await node.compile(program)
+            if error is not None:
+                print(f"Compilation error: {error['error_msg']}")
+            else:
+                error = await node.run()
                 if error is not None:
-                    print(f"Compilation error: {error['error_msg']}")
-                else:
-                    error = await node.run()
-                    if error is not None:
-                        print(f"Error {error['error_code']}")
-            print("done")
-            
+                    print(f"Error {error['error_code']}")
+        print("done")
+
+
     localclient.run_async_program(prog)
     previous_request = time.time()
-    #END INIT
+    # END INIT
 
-    #print("after init")
-    #print(len(localclient.nodes))
+    # print("after init")
+    # print(len(localclient.nodes))
 
     # Listing des Robots
     NBROBOT = len(localclient.nodes)
     start_time = time.time()
     previous_request = 0
-    RobotList=[]
-    if(NBROBOT >0):
+    RobotList = []
+    if NBROBOT > 0:
         cptCreatedRobot = 0
-        firstRobot = Robot(localclient,cptCreatedRobot)
+        firstRobot = Robot(localclient, cptCreatedRobot)
         RobotList.append(firstRobot)
-        while(cptCreatedRobot < NBROBOT-1):
-            cptCreatedRobot+=1
-            nextRob = Robot(localclient,cptCreatedRobot)
+        while cptCreatedRobot < (NBROBOT - 1):
+            cptCreatedRobot += 1
+            nextRob = Robot(localclient, cptCreatedRobot)
             RobotList.append(nextRob)
 
-    #Association Robot -> coord from cam + chat souris ?
+    # Association Robot -> coord from cam + chat souris ?
 
-    #attribution des robots aux IA souhaitées
+    # attribution des robots aux IA souhaitées
     IACatList = []
     IAMouseList = []
     for rob in RobotList:
-        if(rob.behaviour == "cat"):
+        if (rob.behaviour == "cat"):
             cat = IA.Cat(rob)
             IACatList.append(cat)
-        elif(rob.behaviour == "mouse"):
+        elif (rob.behaviour == "mouse"):
             mouse = IA.Mouse(rob)
             IAMouseList.append(mouse)
-
 
     '''
     while(True): #boucle d'actualisation
@@ -111,21 +113,27 @@ if __name__ == '__main__':
                 #doDecision&anction()"""
     '''
 
-    while (configSent and time.time() - start_time < 10):
-        #print(coordReceiver.getCoordFlux())
+    while configSent and (time.time() - start_time < 10):
+
+        flux = coordReceiver.getCoordFlux()['green']
+        if new_coord is not None:
+            all_coords = flux.split(";")
+            coord = all_coords[0].split(",")
+            center = centre_shape(coord[0], coord[1], coord[2], coord[3])
+            IACatList[0].updateCoord(center[0], center[1])
+            IACatList[0].updateRayon(coord[2] - coord[0])  # w-x
 
         for cat in IACatList:
             cat.move()
             cat.objectif.x += 10
             cat.objectif.y += 3
-            cat.robotControled.updateCoord(cat.robotControled.coord_list[0].x * 2,cat.robotControled.coord_list[0].y * 2)
-            #mytime = time.time()
-            #print(mytime - start_time)
+            cat.robotControled.updateCoord(cat.robotControled.coord_list[0].x * 2,
+                                           cat.robotControled.coord_list[0].y * 2)
+            # mytime = time.time()
+            # print(mytime - start_time)
 
-
-    #time.sleep(3)
+    # time.sleep(3)
     triche = RobotList
-            
 
     for rob2 in triche:
         rob2.stopper()
