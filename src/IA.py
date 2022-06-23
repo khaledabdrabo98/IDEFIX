@@ -8,16 +8,15 @@ import time
 
 
 class IA:
-
     robotControled = 0
     lastSupplied = 0
     sleep_required = 0
+
     def __init__(self, robotLinked):
         self.robotControled = robotLinked
 
 
 class Cat(IA):
-
     objectif = Coord()
     objectif.x = 10
     objectif.y = 10
@@ -45,7 +44,7 @@ class Cat(IA):
         else:
             angleObjectif = math.degrees(np.arccos(cosAngle))
 
-        print("angle objectif ",angleObjectif)
+        print("angle objectif ", angleObjectif)
 
         angleRobot = self.robotControled.angle
         print("angle robot ", angleRobot)
@@ -58,36 +57,29 @@ class Cat(IA):
         if ((actual_time - self.sleep_required) >= (self.lastSupplied)):
             print(actual_time)
             angle = int(self.calcul_angle_vers_objectif())
-            if (angle>45 ):
-                self.robotControled.tournerGaucheHard((angle*src.config.DURATION_VERYHARD)/360)
-                self.sleep_required = (((angle*src.config.DURATION_VERYHARD)/360)/1000) +2
-            elif (angle>0):
-                self.robotControled.tournerGaucheSoft((angle*src.config.DURATION_SOFT)/360)
-                self.sleep_required = (((angle*src.config.DURATION_SOFT)/360)/1000) +2
+            if (angle > 45):
+                self.robotControled.tournerGaucheHard((angle * src.config.DURATION_VERYHARD) / 360)
+                self.sleep_required = (((angle * src.config.DURATION_VERYHARD) / 360) / 1000) + 2
+            elif (angle > 0):
+                self.robotControled.tournerGaucheSoft((angle * src.config.DURATION_SOFT) / 360)
+                self.sleep_required = (((angle * src.config.DURATION_SOFT) / 360) / 1000) + 2
 
-            elif (angle <-45):
+            elif (angle < -45):
                 angle = -angle
-                self.robotControled.tournerDroiteHard((angle*src.config.DURATION_VERYHARD)/360)
-                self.sleep_required = (((angle*src.config.DURATION_VERYHARD)/360)/1000) +2
-            elif (angle <0):
+                self.robotControled.tournerDroiteHard((angle * src.config.DURATION_VERYHARD) / 360)
+                self.sleep_required = (((angle * src.config.DURATION_VERYHARD) / 360) / 1000) + 2
+            elif (angle < 0):
                 angle = -angle
-                self.robotControled.tournerDroiteSoft((angle*src.config.DURATION_SOFT)/360)
-                self.sleep_required = (((angle*src.config.DURATION_SOFT)/360)/1000) +2
-            else: #angle = 0
+                self.robotControled.tournerDroiteSoft((angle * src.config.DURATION_SOFT) / 360)
+                self.sleep_required = (((angle * src.config.DURATION_SOFT) / 360) / 1000) + 2
+            else:  # angle = 0
                 self.robotControled.avancer()
                 self.sleep_required = 0
             self.lastSupplied = time.time()
-            print("j'attend " +str(self.sleep_required)+"sec")
+            print("j'attend " + str(self.sleep_required) + "sec")
 
-
-
-
-
-
-    
 
 class Mouse(IA):
     def __init__(self, robotLinked, ext2):
         super().__init__(robotLinked)
         self.mouseExtraVar = ext2
-

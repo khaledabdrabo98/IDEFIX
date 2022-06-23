@@ -5,10 +5,10 @@ from time import sleep
 
 from src.config import LED_COLORS, NB_ROBOTS, NB_CHATS, NB_SOURIS
 
-#RASPBERRY_PI_IP_ADDRESS = "172.20.10.13" khaled tel
-RASPBERRY_PI_IP_ADDRESS = "192.168.1.67" # co box
-#RASPBERRY_PI_IP_ADDRESS = "192.168.121.103" # co tel
-#RASPBERRY_PI_IP_PORT = 5005 #khaked
+# RASPBERRY_PI_IP_ADDRESS = "172.20.10.13" khaled tel
+RASPBERRY_PI_IP_ADDRESS = "192.168.1.67"  # co box
+# RASPBERRY_PI_IP_ADDRESS = "192.168.121.103" # co tel
+# RASPBERRY_PI_IP_PORT = 5005 #khaled
 RASPBERRY_PI_IP_PORT = 5005
 
 
@@ -17,7 +17,7 @@ def onStateChanged(state, msg):
     if state == "LISTENING":
         print("PC:-- Listening...")
     elif state == "CONNECTED":
-        
+
         print("PC:-- Connected to Raspberry Pi")
         print("PC:-- Sending configuration...")
         # init and send config

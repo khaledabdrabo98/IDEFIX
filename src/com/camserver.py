@@ -5,14 +5,15 @@ import cv2
 import numpy as np
 from time import sleep
 import json
-#import config
+
+# import config
 
 tcp_start_sending_coord = "Sending coordinates..."
 
 # divise par la resolution les pos finales
-CAM_RES_WIDTH = 1280 #config.CAM_RES_WIDTH
-CAM_RES_HEIGHT = 720 #config.CAM_RES_HEIGHT
-FRAME_RATE = 32 #config.FRAME_RATE
+CAM_RES_WIDTH = 1280  # config.CAM_RES_WIDTH
+CAM_RES_HEIGHT = 720  # config.CAM_RES_HEIGHT
+FRAME_RATE = 32  # config.FRAME_RATE
 
 
 def onStateChanged(state, msg):
@@ -68,12 +69,12 @@ class RaspiCamServer:
             # Set range for red color and define mask
             red_lower = np.array([160, 155, 84], np.uint8)
             red_upper = np.array([180, 255, 255], np.uint8)
-            red_mask = cv2.inRange(hsvFrame, red_lower, red_upper)
+            red_mask = cv2.inRange(frame, red_lower, red_upper)
 
             # Set range for green color and define mask
             green_lower = np.array([50, 110, 50], np.uint8)
             green_upper = np.array([100, 200, 100], np.uint8)
-            green_mask = cv2.inRange(hsvFrame, green_lower, green_upper)
+            green_mask = cv2.inRange(frame, green_lower, green_upper)
 
             # Morphological Transform, Dilation for each color and bitwise_and operator
             # between frame and mask determines to detect only that particular color

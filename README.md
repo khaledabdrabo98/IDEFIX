@@ -15,10 +15,16 @@ Projet transversal innovant
 ... and (of course) an Internet connection.
 
 ## How to use
-First, change the IP address and port of the PC and the Raspberry Pi in `raspi.py` and `config-manager.py`, respectively.
+First, change the IP address and port of the PC and the Raspberry Pi in `raspi.py` and `main.py` (or `config-manager.py`), respectively.
 
 Second, use these commands to run the scripts:
 #### On PC
+```bash
+python3 main.py
+```
+
+#### On PC 
+(if you are testing sending coordinates from raspi to pc without robot connection))
 ```bash
 python3 config-manager.py
 ```
@@ -55,28 +61,32 @@ ssh -Y pi@[ip address]
 
 ## Project structure (WIP)
 ```
+
 .
-├── config-manager.py               (Main script PC side)
+├── main.py                         (Main script PC side)
+├── config-manager.py               (Camera and connection test script PC side)
 ├── raspi.py                        (Main script Raspberry Pi side)
-├── doc                             (Project documentation)
 ├── src                             (Core source code)
 │       ├── com                     (Manages tcp communication between PC and Raspberry Pi)
-│       │       ├── camserver.py    
-│       │       ├── receiver.py
+│       │       ├── camserver.py    (using Camera Module with OpenCV to detect Robots) 
+│       │       ├── receiver.py     (Receive configuration raspi side and coordinates on pc) 
 │       │       └── tcpcom          (TCP communincation library)
-│       ├── entity                  (Manages placements and strategies of robots)
-│       │       ├── chat.py
-│       │       ├── robot.py
-│       │       └── souris.py
+│       ├── Coord.py                
+│       ├── old                     
+│       │   ├── multiCo.py
+│       │   └── test.py
 │       ├── config.py               (Contains the values for Camera Module configuration)
+│       ├── IA.py                   (Manages placements and strategies of robots)
+│       ├── Robot.py                (Robot Entity)
+│       ├── TestCoord.py            
 │       └── utils.py                (Contains utility fonctions)
-└── tdm-python                      (TDM client Python module)
-├── README.md
+├── doc                             (Project 'draft' documentation)
+├── tdm-python                      (TDM client Python module)
+└── README.md                       (You're here!)
 ```
 
 
 ## Developers : 
 * ABDRABO Khaled p1713323
-* BOUDJEMA Bilal p2111858
 * GUILLARDEL Thomas p1612078
 * SERVAGENT Anthony p1709447
