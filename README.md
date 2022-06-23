@@ -5,6 +5,8 @@ Projet transversal innovant
 ## Requirements
 #### On PC
 - Python3
+- Thymio Suite 
+- TDM Client
 
 #### On Raspberry Pi
 - PiCamera
